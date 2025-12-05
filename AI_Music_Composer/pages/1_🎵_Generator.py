@@ -4,9 +4,13 @@ import numpy as np
 from scipy.io.wavfile import write
 from midiutil import MIDIFile
 from io import BytesIO
+from datetime import datetime
 
 st.set_page_config(page_title="Generator Musik", page_icon="🎵", layout="wide")
 
+if 'history' not in st.session_state:
+    st.session_state['history'] = []
+    
 # ==========================================
 # 1. DATABASE & CONFIG
 # ==========================================
@@ -395,3 +399,4 @@ with tab3:
                         key=f"hist_btn_{i}"
                     )
                 st.divider()
+
