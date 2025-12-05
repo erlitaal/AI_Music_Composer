@@ -1,10 +1,12 @@
 import streamlit as st
 import random
 import numpy as np
-from scipy.io.wavfile import write
+import os
+import requests
 from midiutil import MIDIFile
 from io import BytesIO
 from datetime import datetime
+from midi2audio import FluidSynth
 
 st.set_page_config(page_title="Generator Musik", page_icon="🎵", layout="wide")
 
@@ -254,16 +256,52 @@ def create_final_midi(structure, melody, instr_name, active_tracks, bpm):
     midi.writeFile(midi_data)
     return midi_data.getvalue()
 
-def generate_preview_wav(melody):
-    sample_rate = 44100
-    audio_data = []
-    for ev in melody:
-        freq = 440 * (2 ** ((ev["note"] - 69) / 12))
-        dur = ev["duration"] * 0.35 
-        t = np.linspace(0, dur, int(sample_rate * dur), False)
-        wave = 0.3 * np.sin(2 * np.pi * freq * t) * np.exp(-4 * t)
-        audio_data.append(wave)
-    return np.int16(np.concatenate(audio_data) * 32767)
+# --- FUNGSI RENDER AUDIO (INI YANG BARU & PENTING!) ---
+def render_audio(midi_bytes):
+    """
+    Mengubah data MIDI menjadi WAV menggunakan FluidSynth.
+    Jika soundfont belum ada, download otomatis dari internet.
+    """
+    soundfont_path = "soundfont.sf2"
+    
+    # 1. CEK & DOWNLOAD SOUNDFONT OTOMATIS
+    if not os.path.exists(soundfont_path):
+        st.warning("⚠️ SoundFont belum ditemukan. Sedang mendownload otomatis (30MB)...")
+        # Link direct ke soundfont ringan (GeneralUser GS Lite)
+        url = "https://github.com/freepats/GeneralUser-GS/raw/master/GeneralUser_GS_1.471/GeneralUser_GS_1.471.sf2"
+        try:
+            r = requests.get(url)
+            with open(soundfont_path, "wb") as f:
+                f.write(r.content)
+            st.success("✅ SoundFont berhasil didownload!")
+        except Exception as e:
+            return None, f"Gagal download SoundFont: {e}"
+
+    # 2. PROSES RENDER (MIDI -> WAV)
+    temp_midi = "temp_output.mid"
+    temp_wav = "temp_output.wav"
+    
+    # Tulis file MIDI sementara
+    with open(temp_midi, "wb") as f:
+        f.write(midi_bytes)
+        
+    try:
+        # Panggil FluidSynth
+        fs = FluidSynth(soundfont_path)
+        fs.midi_to_audio(temp_midi, temp_wav)
+        
+        # Baca hasil WAV ke memori
+        with open(temp_wav, "rb") as f:
+            wav_data = f.read()
+            
+        # Bersihkan file sampah (Opsional, biar bersih)
+        # os.remove(temp_midi)
+        # os.remove(temp_wav)
+            
+        return wav_data, None
+        
+    except Exception as e:
+        return None, f"Error FluidSynth: {e}. (Pastikan 'fluidsynth' ada di packages.txt)"
 
 # ==========================================
 # 4. WEB UI
@@ -304,15 +342,20 @@ with tab1:
         
         midi_bytes = create_final_midi(struct_song, melody_song, p["instr"], p["tracks"], p["bpm"])
         
-        wav_buf = BytesIO()
-        write(wav_buf, 44100, generate_preview_wav(melody_song))
-        wav_buf.seek(0)
-        st.audio(wav_buf, format='audio/wav')
-        st.download_button("Download MIDI", midi_bytes, f"ai_{p['style']}.mid", "audio/midi")
-
-        # SIMPAN KE HISTORY
-        save_to_history(f"{preset_name}", midi_bytes, wav_buf, f"C Major - {p['style']}")
-        st.toast("✅ Lagu berhasil disimpan ke Riwayat!")
+        wav_data, err = render_audio(midi_bytes)
+        if err:
+            st.error(err)
+        else:
+            st.audio(wav_data, format='audio/wav')
+                
+            col_d1, col_d2 = st.columns(2)
+            with col_d1:
+                st.download_button("💾 Download Audio (WAV)", wav_data, f"ai_{p['style']}.wav", "audio/wav")
+            with col_d2:
+                st.download_button("🎹 Download MIDI", midi_bytes, f"ai_{p['style']}.mid", "audio/midi")
+                
+            save_to_history(f"{preset_name}", midi_bytes, wav_data, f"C Major - {p['style']}")
+            st.toast("✅ Lagu berhasil disimpan!")
         
 # --- TAB 2: ADVANCED ---
 with tab2:
@@ -364,13 +407,23 @@ with tab2:
         melody_song = generate_melody(struct_song, adv_bars, adv_scale)
         midi_custom = create_final_midi(struct_song, melody_song, adv_instr, adv_tracks, adv_bpm)
         
-        wb = BytesIO()
-        write(wb, 44100, generate_preview_wav(melody_song))
-        wb.seek(0)
-        st.audio(wb, format='audio/wav')
+        wav_custom, err_custom = render_audio(midi_custom)
+        
+        if err_custom:
+            st.error(err_custom)
+        else:
+            st.audio(wav_custom, format='audio/wav')
+                
+            col_c1, col_c2 = st.columns(2)
+            with col_c1:
+                st.download_button("💾 Download WAV", wav_custom, "custom.wav", "audio/wav")
+            with col_c2:
+                st.download_button("🎹 Download MIDI", midi_custom, "custom.mid", "audio/midi")
+            
+            save_to_history(f"Custom {adv_style}", midi_custom, wav_custom, f"{adv_key} {adv_scale}")
+            st.toast("✅ Lagu berhasil disimpan!")
 
-        st.download_button("Download Custom MIDI", midi_custom, "custom.mid", "audio/midi")
-
+# --- TAB 3: HISTORY ---
 with tab3:
     st.header("📜 Riwayat Sesi Ini")
     st.caption("Daftar lagu yang sudah kamu buat selama sesi ini. (Hilang jika browser di-refresh)")
@@ -392,11 +445,17 @@ with tab3:
                     st.write("")
                     st.write("")
                     st.download_button(
-                        label="💾 Unduh MIDI",
-                        data=item['midi'],
-                        file_name=f"history_{i}.mid",
-                        mime="audio/midi",
-                        key=f"hist_btn_{i}"
+                        label="💾 Unduh WAV", 
+                        data=item['wav'], 
+                        file_name=f"hist_{i}.wav", 
+                        mime="audio/wav", 
+                        key=f"dww_{i}"
+                    )
+                    st.download_button(
+                        label="🎹 Unduh MIDI", 
+                        data=item['midi'], 
+                        file_name=f"hist_{i}.mid", 
+                        mime="audio/midi", 
+                        key=f"dwm_{i}"
                     )
                 st.divider()
-
