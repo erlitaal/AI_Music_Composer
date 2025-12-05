@@ -267,7 +267,19 @@ def generate_preview_wav(melody):
 st.title("🎵 AI Music Composer")
 
 # HANYA 2 TAB (Simple & Advanced)
-tab1, tab2 = st.tabs(["🚀 Simple Mode", "🛠️ Advanced Mode"])
+tab1, tab2, tab3 = st.tabs(["🚀 Simple Mode", "🛠️ Advanced Mode", "📜 Riwayat Sesi"])
+
+# --- FUNGSI SAVE HISTORY ---
+def save_to_history(name, midi_data, wav_data, info):
+    timestamp = datetime.now().strftime("%H:%M:%S")
+    entry = {
+        "time": timestamp,
+        "name": name,
+        "midi": midi_data,
+        "wav": wav_data,
+        "info": info
+    }
+    st.session_state['history'].insert(0, entry)
 
 # --- TAB 1: SIMPLE ---
 with tab1:
@@ -275,7 +287,7 @@ with tab1:
     c1, c2 = st.columns(2)
     with c1:
         preset_name = st.radio("Mood:", list(MOOD_PRESETS.keys()))
-        dur_sim = st.slider("Durasi Lagu (Bar):", 4, 32, 8, key="d1")
+        dur_sim = st.slider("Durasi Lagu (Bar):", 4, 32, 8, step=4, key="d1")
     with c2:
         p = MOOD_PRESETS[preset_name]
         st.success(f"**Instrumen:** {p['instr']}")
@@ -294,10 +306,14 @@ with tab1:
         st.audio(wav_buf, format='audio/wav')
         st.download_button("Download MIDI", midi_bytes, f"ai_{p['style']}.mid", "audio/midi")
 
+        # SIMPAN KE HISTORY
+        save_to_history(f"{preset_name}", midi_bytes, wav_buf, f"C Major - {p['style']}")
+        st.toast("✅ Lagu berhasil disimpan ke Riwayat!")
+        
 # --- TAB 2: ADVANCED ---
 with tab2:
     st.subheader("Konfigurasi Manual")
-    st.write("Di mode ini, kamu bebas mencampur-adukkan teori musik.")
+    st.write("Di mode ini, kamu bebas mencampuradukkan teori musik.")
     
     # --- EXPANDER PANDUAN (SOLUSI REQUEST KAMU) ---
     with st.expander("Panduan Konfigurasi Manual"):
@@ -313,6 +329,7 @@ with tab2:
         - **Emotional Turn (vi-IV-I-V):** Rumus lagu galau modern.
         - **Jazz Standard (ii-V-I):** Rumus wajib Jazz (Circle of Fifths).
         - **Dark Tension (i-ii-vii):** Menciptakan rasa takut/gelisah.
+        - **Canon Walk (I-V-vi-iii):** Menciptakan rasa klasik, anggun, dan sentimental.
         
         **3. Style (Gaya Main)**
         - **Pop:** Bass lurus, chord panjang (Block), drum standar.
@@ -331,10 +348,12 @@ with tab2:
         adv_style = st.selectbox("Style (Gaya Main):", list(GROOVE_CONFIG.keys()), help="Menentukan pola Drum dan Bass")
         adv_instr = st.selectbox("Instrumen Melodi:", list(INSTRUMENTS.keys()), help="Pilih suara instrumen melodi")
         adv_bpm = st.number_input("Tempo (BPM):", 60, 180, 120, help="Kecepatan lagu")
-        adv_bars = st.number_input("Durasi (Bar):", min_value=4, max_value=32, value=8, step=4, help="Panjang lagu")
-        
+
+    adv_bars = st.slider("Durasi lagu (Bar):", 4, 32, 8, step=4, key="adv_bars", help="Panjang lagu")
+    
     adv_tracks = st.multiselect("Active Tracks:", ["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"], 
-                        default=["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"])
+                        default=["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"],
+                        help="Pilih Track (Layer) mana saja yang ingin dimasukkan ke dalam file MIDI.")
     
     if st.button("🛠️ Generate Custom"):
         struct_song = generate_structure(adv_key, adv_scale, adv_prog, adv_bars, adv_style)
@@ -347,3 +366,32 @@ with tab2:
         st.audio(wb, format='audio/wav')
 
         st.download_button("Download Custom MIDI", midi_custom, "custom.mid", "audio/midi")
+
+with tab3:
+    st.header("📜 Riwayat Sesi Ini")
+    st.caption("Daftar lagu yang sudah kamu buat selama sesi ini. (Hilang jika browser di-refresh)")
+    
+    if len(st.session_state['history']) == 0:
+        st.info("Belum ada riwayat. Buat lagu dulu yuk!")
+    else:
+        for i, item in enumerate(st.session_state['history']):
+            with st.container():
+                c1, c2, c3 = st.columns([1, 2, 1])
+                with c1:
+                    st.write(f"**#{len(st.session_state['history'])-i}**")
+                    st.caption(item['time'])
+                with c2:
+                    st.write(f"**{item['name']}**")
+                    st.caption(item['info'])
+                    st.audio(item['wav'], format='audio/wav')
+                with c3:
+                    st.write("")
+                    st.write("")
+                    st.download_button(
+                        label="💾 Unduh MIDI",
+                        data=item['midi'],
+                        file_name=f"history_{i}.mid",
+                        mime="audio/midi",
+                        key=f"hist_btn_{i}"
+                    )
+                st.divider()
