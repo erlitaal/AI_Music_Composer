@@ -251,7 +251,10 @@ def create_final_midi(structure, melody, instr_name, active_tracks, bpm):
             pad_notes = [bar["root_note"], bar["chord_notes"][-1]]
             for n in pad_notes:
                 midi.addNote(4, 4, n, start_t, 4, 55)
-
+                
+    total_duration_beats = len(structure) * 4
+    midi.addNote(0, 0, 0, total_duration_beats, 0.1, 0)
+    
     midi_data = BytesIO()
     midi.writeFile(midi_data)
     return midi_data.getvalue()
