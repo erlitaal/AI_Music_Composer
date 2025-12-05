@@ -5,17 +5,41 @@ st.set_page_config(page_title="Tentang Kami", page_icon="👥", layout="wide")
 # --- CSS ---
 st.markdown("""
 <style>
-    /* Target semua gambar di halaman ini */
-    img {
-        transition: transform 0.3s ease; /* Animasi halus 0.3 detik */
-        border-radius: 10px; /* Opsional: Biar sudutnya tumpul dikit */
+    /* 1. HILANGKAN IKON RANTAI (ANCHOR LINK) DI JUDUL */
+    /* Ini menyembunyikan tombol link di samping header */
+    [data-testid="stHeaderActionElements"] {
+        display: none !important;
+    }
+
+    /* 2. HILANGKAN TOMBOL FULLSCREEN DI GAMBAR */
+    /* Ini menyembunyikan tombol panah pembesar saat hover gambar */
+    [data-testid="StyledFullScreenButton"] {
+        display: none !important;
+    }
+    button[title="View fullscreen"] {
+        display: none !important;
+    }
+
+    /* 3. EFEK HOVER ZOOM YANG LEBIH MULUS */
+    /* Target container gambar agar rapi */
+    [data-testid="stImage"] {
+        transition: transform 0.3s ease;
+        border-radius: 15px;
+        overflow: hidden; /* Supaya sudut tetap tumpul saat zoom */
     }
     
-    /* Saat mouse diarahkan ke gambar (Hover) */
-    img:hover {
-        transform: scale(1.1); /* Membesar 110% */
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Efek bayangan timbul */
-        z-index: 999;
+    /* Target gambar di dalamnya */
+    [data-testid="stImage"] img {
+        border-radius: 15px;
+        object-fit: cover;
+    }
+
+    /* Efek saat mouse diarahkan (Hover) */
+    [data-testid="stImage"]:hover {
+        transform: scale(1.08); /* Membesar 108% */
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15); /* Bayangan timbul */
+        z-index: 99;
+        cursor: default; /* Kursor panah biasa, bukan tangan klik */
     }
 </style>
 """, unsafe_allow_html=True)
@@ -90,3 +114,4 @@ st.markdown("""
 * 🔊 **Scipy & NumPy** (Pemrosesan Sinyal Audio Digital)
 
 """)
+
