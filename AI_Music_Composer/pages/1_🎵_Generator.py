@@ -351,7 +351,7 @@ with tab1:
         else:
             st.audio(wav_data, format='audio/wav')
                 
-            col_d1, col_d2 = st.columns(2)
+            col_d1, col_d2 = st.columns(1, 1)
             with col_d1:
                 st.download_button("💾 Download Audio (WAV)", wav_data, f"ai_{p['style']}.wav", "audio/wav")
             with col_d2:
@@ -417,7 +417,7 @@ with tab2:
         else:
             st.audio(wav_custom, format='audio/wav')
                 
-            col_c1, col_c2 = st.columns(2)
+            col_c1, col_c2 = st.columns(1, 1)
             with col_c1:
                 st.download_button("💾 Download WAV", wav_custom, "custom.wav", "audio/wav")
             with col_c2:
@@ -436,7 +436,7 @@ with tab3:
     else:
         for i, item in enumerate(st.session_state['history']):
             with st.container():
-                c1, c2, c3, c4 = st.columns([1, 2, 1, 1])
+                c1, c2, c3, c4 = st.columns([1, 2, 1, 2])
                 with c1:
                     st.write(f"**#{len(st.session_state['history'])-i}**")
                     st.caption(item['time'])
