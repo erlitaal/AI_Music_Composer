@@ -2,44 +2,37 @@ import streamlit as st
 
 st.set_page_config(page_title="Tentang Kami", page_icon="👥", layout="wide")
 
-# --- CSS ---
+# ==========================================
+# CSS CUSTOM (GAYA TAMPILAN)
+# ==========================================
 st.markdown("""
 <style>
-    /* 1. HILANGKAN IKON RANTAI (ANCHOR LINK) DI JUDUL */
-    /* Ini menyembunyikan tombol link di samping header */
+    /* HILANGKAN IKON RANTAI DI HEADER */
     [data-testid="stHeaderActionElements"] {
         display: none !important;
     }
 
-    /* 2. HILANGKAN TOMBOL FULLSCREEN DI GAMBAR */
-    /* Ini menyembunyikan tombol panah pembesar saat hover gambar */
-    [data-testid="StyledFullScreenButton"] {
-        display: none !important;
-    }
-    button[title="View fullscreen"] {
-        display: none !important;
+    /* GAYA FOTO PROFIL */
+    .profile-img {
+        width: 100%;             /* Lebar mengikuti kolom */
+        max-width: 150px;        /* Maksimal 150px biar gak kegedean */
+        border-radius: 15px;     /* Sudut tumpul */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: block;
+        margin-bottom: 10px;
+        cursor: pointer;         /* Ubah kursor jadi tangan */
     }
 
-    /* 3. EFEK HOVER ZOOM YANG LEBIH MULUS */
-    /* Target container gambar agar rapi */
-    [data-testid="stImage"] {
-        transition: transform 0.3s ease;
-        border-radius: 15px;
-        overflow: hidden; /* Supaya sudut tetap tumpul saat zoom */
+    /* EFEK SAAT MOUSE DIARAHKAN (HOVER) */
+    .profile-img:hover {
+        transform: scale(1.08);  /* Membesar */
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2); /* Bayangan timbul */
+        filter: brightness(1.1); /* Sedikit lebih terang */
     }
     
-    /* Target gambar di dalamnya */
-    [data-testid="stImage"] img {
-        border-radius: 15px;
-        object-fit: cover;
-    }
-
-    /* Efek saat mouse diarahkan (Hover) */
-    [data-testid="stImage"]:hover {
-        transform: scale(1.08); /* Membesar 108% */
-        box-shadow: 0 10px 20px rgba(0,0,0,0.15); /* Bayangan timbul */
-        z-index: 99;
-        cursor: default; /* Kursor panah biasa, bukan tangan klik */
+    /* GAYA LINK IG (BIAR GAK ADA GARIS BAWAH JELEK) */
+    a.profile-link {
+        text-decoration: none;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -49,12 +42,17 @@ st.markdown("Aplikasi ini dipersembahkan oleh **Kelompok 5** untuk memenuhi Tuga
 st.write("---")
 
 # FUNGSI UNTUK MEMBUAT KARTU PROFIL
-def kartu_anggota(nama, nim, peran, url_foto, quote):
+def kartu_anggota(nama, nim, peran, url_foto, quote, link_ig):
     with st.container():
         col1, col2 = st.columns([1, 3])
         with col1:
-            # Menampilkan foto (Lingkaran jika memungkinkan di CSS, tapi kotak rapi di sini)
-            st.image(url_foto, width=150)
+            html_code = f"""
+            <a href="{link_ig}" target="_blank" class="profile-link" title="Klik untuk ke Instagram">
+                <img src="{url_foto}" class="profile-img">
+            </a>
+            """
+            st.markdown(html_code, unsafe_allow_html=True)
+            
         with col2:
             st.subheader(nama)
             st.caption(f"NIM: {nim}")
@@ -67,16 +65,22 @@ col_a, col_b = st.columns(2)
 with col_a:
     # Ganti URL ini dengan nama file lokal nanti (misal: "images/foto_budi.jpg")
     kartu_anggota(
-        "Nama", "10101010", "Lead Developer & Logic",
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix", # Placeholder Avatar
-        "Coding is poetry, music is math."
+        nama="Nama Anggota", 
+        nim="10101010", 
+        peran="Lead Developer & Logic",
+        url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix", 
+        quote="Coding is poetry, music is math.",
+        link_ig="https://www.instagram.com/instagram"
     )
 
 with col_b:
     kartu_anggota(
-        "Nama Anggota 2", "12121212", "Backend & Audio Engineer",
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka",
-        "Mengubah angka menjadi nada."
+        nama="Nama Anggota 2", 
+        nim="12121212", 
+        peran="Backend & Audio Engineer",
+        url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka",
+        quote="Mengubah angka menjadi nada.",
+        link_ig="https://www.instagram.com/"
     )
 
 st.write("---")
@@ -84,26 +88,22 @@ st.write("---")
 # --- BARIS 2 (Anggota Lain) ---
 c1, c2, c3 = st.columns(3)
 
-with c1:
-    kartu_anggota(
-        "Nama Anggota 3", "12121212", "Frontend & UI/UX",
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=Bob",
-        "Mengubah angka menjadi nada."
-    )
+def kartu_kecil(col, nama, role, img, ig):
+    with col:
+        html_code = f"""
+        <div style="text-align: center;">
+            <a href="{ig}" target="_blank">
+                <img src="{img}" class="profile-img" style="margin: 0 auto;">
+            </a>
+            <p style="margin-top: 10px;"><b>{nama}</b><br>
+            <span style="font-size: 0.8em; color: gray;">{role}</span></p>
+        </div>
+        """
+        st.markdown(html_code, unsafe_allow_html=True)
 
-with c2:
-    kartu_anggota(
-        "Nama Anggota 4", "12121212", "Data Analyst & QA",
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=Data",
-        "Mengubah angka menjadi nada."
-    )
-
-with c3:
-    kartu_anggota(
-        "Nama Anggota 5", "12121212", "Report & Documentation",
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=Jack",
-        "Mengubah angka menjadi nada."
-    )
+kartu_kecil(c1, "Nama Anggota 3", "Frontend & UI/UX", "https://api.dicebear.com/7.x/avataaars/svg?seed=Bob", "https://instagram.com")
+kartu_kecil(c2, "Nama Anggota 4", "Data Analyst & QA", "https://api.dicebear.com/7.x/avataaars/svg?seed=Data", "https://instagram.com")
+kartu_kecil(c3, "Nama Anggota 5", "Report & Doc", "https://api.dicebear.com/7.x/avataaars/svg?seed=Jack", "https://instagram.com")
 
 st.write("---")
 st.markdown("### 🛠️ Tech Stack yang Digunakan")
@@ -114,4 +114,5 @@ st.markdown("""
 * 🔊 **Scipy & NumPy** (Pemrosesan Sinyal Audio Digital)
 
 """)
+
 
