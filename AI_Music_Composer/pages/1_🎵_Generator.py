@@ -7,7 +7,6 @@ from midiutil import MIDIFile
 from io import BytesIO
 from datetime import datetime
 from midi2audio import FluidSynth
-from scipy.io import wavfile
 
 st.set_page_config(page_title="Generator Musik", page_icon="🎵", layout="wide")
 
@@ -294,61 +293,18 @@ def render_audio(midi_bytes):
         fs = FluidSynth(soundfont_path)
         fs.midi_to_audio(temp_midi, temp_wav)
         
-        # 1. Hitung durasi seharusnya (Detik)
-        # Rumus: (Total Beat) / (BPM / 60)
-        total_beats = bars * 4
-        expected_duration_sec = total_beats / (bpm / 60)
-        
-        # 2. Tambah sedikit 'Tail' (1 detik) biar reverb enak
-        final_duration_sec = expected_duration_sec + 1.5
-        
-        # 3. Baca Audio Mentah pakai Scipy
-        sample_rate, audio_data = wavfile.read(temp_wav)
-        
-        # 4. Potong Data Array
-        target_samples = int(final_duration_sec * sample_rate)
-        
-        if len(audio_data) > target_samples:
-            # Potong (Slice)
-            trimmed_data = audio_data[:target_samples]
+        # Baca hasil WAV ke memori
+        with open(temp_wav, "rb") as f:
+            wav_data = f.read()
             
-            # FADE OUT MANUAL (Biar potongan gak kasar 'ceklek')
-            # Kita fade out 0.5 detik terakhir
-            fade_len = int(0.5 * sample_rate)
-            if len(trimmed_data) > fade_len:
-                # Bikin kurva fade out (1.0 -> 0.0)
-                fade_curve = np.linspace(1.0, 0.0, fade_len)
-                
-                # Kalikan bagian akhir dengan kurva (Harus handle stereo/mono)
-                if len(trimmed_data.shape) == 2: # Stereo
-                    trimmed_data[-fade_len:, 0] = trimmed_data[-fade_len:, 0] * fade_curve
-                    trimmed_data[-fade_len:, 1] = trimmed_data[-fade_len:, 1] * fade_curve
-                else: # Mono
-                    trimmed_data[-fade_len:] = trimmed_data[-fade_len:] * fade_curve
+        # Bersihkan file sampah (Opsional, biar bersih)
+        # os.remove(temp_midi)
+        # os.remove(temp_wav)
             
-            # Simpan hasil potongan ke Memory Buffer
-            wav_buffer = BytesIO()
-            wavfile.write(wav_buffer, sample_rate, trimmed_data.astype(np.int16))
-            return wav_buffer.getvalue(), None
-        else:
-            # Kalau gak perlu potong, langsung baca file WAV
-            with open(temp_wav, "rb") as f:
-                wav_data = f.read()
+        return wav_data, None
         
     except Exception as e:
-        return None, f"Gagal render: {e}"
-
-def generate_preview_wav(melody):
-    # Preview Monophonic (Backup jika fluidsynth gagal)
-    sample_rate = 44100
-    audio_data = []
-    for ev in melody:
-        freq = 440 * (2 ** ((ev["note"] - 69) / 12))
-        dur = ev["duration"] * 0.35 
-        t = np.linspace(0, dur, int(sample_rate * dur), False)
-        wave = 0.3 * np.sin(2 * np.pi * freq * t) * np.exp(-4 * t)
-        audio_data.append(wave)
-    return np.int16(np.concatenate(audio_data) * 32767)
+        return None, f"Error FluidSynth: {e}. (Pastikan 'fluidsynth' ada di packages.txt)"
 
 # ==========================================
 # 4. WEB UI
