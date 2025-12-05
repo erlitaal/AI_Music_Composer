@@ -88,22 +88,35 @@ st.write("---")
 # --- BARIS 2 (Anggota Lain) ---
 c1, c2, c3 = st.columns(3)
 
-def kartu_kecil(col, nama, role, img, ig):
-    with col:
-        html_code = f"""
-        <div style="text-align: center;">
-            <a href="{ig}" target="_blank">
-                <img src="{img}" class="profile-img" style="margin: 0 auto;">
-            </a>
-            <p style="margin-top: 10px;"><b>{nama}</b><br>
-            <span style="font-size: 0.8em; color: gray;">{role}</span></p>
-        </div>
-        """
-        st.markdown(html_code, unsafe_allow_html=True)
+with c1:
+    kartu_anggota(
+        nama="Nama Anggota 3", 
+        nim="12121212", 
+        peran="Frontend & UI/UX",
+        url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Bob",
+        quote="Mengubah angka menjadi nada.",
+        link_ig="https://www.instagram.com/"
+    )
 
-kartu_kecil(c1, "Nama Anggota 3", "Frontend & UI/UX", "https://api.dicebear.com/7.x/avataaars/svg?seed=Bob", "https://instagram.com")
-kartu_kecil(c2, "Nama Anggota 4", "Data Analyst & QA", "https://api.dicebear.com/7.x/avataaars/svg?seed=Data", "https://instagram.com")
-kartu_kecil(c3, "Nama Anggota 5", "Report & Doc", "https://api.dicebear.com/7.x/avataaars/svg?seed=Jack", "https://instagram.com")
+with c2:
+    kartu_anggota(
+        nama="Nama Anggota 4", 
+        nim="12121212", 
+        peran="Data Analyst & QA",
+        url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Data",
+        quote="Mengubah angka menjadi nada.",
+        link_ig="https://www.instagram.com/"
+    )
+
+with c3:
+    kartu_anggota(
+        nama="Nama Anggota 5", 
+        nim="12121212", 
+        peran="Report & Documentation",
+        url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Jack",
+        quote="Mengubah angka menjadi nada.",
+        link_ig="https://www.instagram.com/"
+    )
 
 st.write("---")
 st.markdown("### 🛠️ Tech Stack yang Digunakan")
