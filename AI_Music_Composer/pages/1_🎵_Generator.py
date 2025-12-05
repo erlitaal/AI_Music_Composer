@@ -275,7 +275,7 @@ with tab1:
     c1, c2 = st.columns(2)
     with c1:
         preset_name = st.radio("Mood:", list(MOOD_PRESETS.keys()))
-        dur_sim = st.slider("Durasi Lagu (Bar):", 4, 16, 8, key="d1")
+        dur_sim = st.slider("Durasi Lagu (Bar):", 4, 32, 8, key="d1")
     with c2:
         p = MOOD_PRESETS[preset_name]
         st.success(f"**Instrumen:** {p['instr']}")
@@ -331,17 +331,19 @@ with tab2:
         adv_style = st.selectbox("Style (Gaya Main):", list(GROOVE_CONFIG.keys()), help="Menentukan pola Drum dan Bass")
         adv_instr = st.selectbox("Instrumen Melodi:", list(INSTRUMENTS.keys()), help="Pilih suara instrumen melodi")
         adv_bpm = st.number_input("Tempo (BPM):", 60, 180, 120, help="Kecepatan lagu")
+        adv_bars = st.number_input("Durasi (Bar):", min_value=4, max_value=32, value=8, step=4, help="Panjang lagu")
         
     adv_tracks = st.multiselect("Active Tracks:", ["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"], 
                         default=["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"])
     
     if st.button("🛠️ Generate Custom"):
-        struct_song = generate_structure(adv_key, adv_scale, adv_prog, 8, adv_style)
-        melody_song = generate_melody(struct_song, 8, adv_scale)
+        struct_song = generate_structure(adv_key, adv_scale, adv_prog, adv_bars, adv_style)
+        melody_song = generate_melody(struct_song, adv_bars, adv_scale)
         midi_custom = create_final_midi(struct_song, melody_song, adv_instr, adv_tracks, adv_bpm)
         
         wb = BytesIO()
         write(wb, 44100, generate_preview_wav(melody_song))
         wb.seek(0)
         st.audio(wb, format='audio/wav')
+
         st.download_button("Download Custom MIDI", midi_custom, "custom.mid", "audio/midi")
