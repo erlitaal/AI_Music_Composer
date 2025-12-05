@@ -2,6 +2,24 @@ import streamlit as st
 
 st.set_page_config(page_title="Tentang Kami", page_icon="👥", layout="wide")
 
+# --- CSS ---
+st.markdown("""
+<style>
+    /* Target semua gambar di halaman ini */
+    img {
+        transition: transform 0.3s ease; /* Animasi halus 0.3 detik */
+        border-radius: 10px; /* Opsional: Biar sudutnya tumpul dikit */
+    }
+    
+    /* Saat mouse diarahkan ke gambar (Hover) */
+    img:hover {
+        transform: scale(1.1); /* Membesar 110% */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Efek bayangan timbul */
+        z-index: 999;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 st.title("👥 Tim Pengembang")
 st.markdown("Aplikasi ini dipersembahkan oleh **Kelompok 5** untuk memenuhi Tugas Besar Mata Kuliah **Teori Bahasa Otomata (TBO)**.")
 st.write("---")
@@ -70,4 +88,5 @@ st.markdown("""
 * 🌊 **Streamlit** (Framework Web App)
 * 🎹 **MidiUtil** (Generasi File MIDI)
 * 🔊 **Scipy & NumPy** (Pemrosesan Sinyal Audio Digital)
+
 """)
