@@ -6,25 +6,24 @@ import requests
 import tempfile
 import subprocess
 import uuid
+import time
 from midiutil import MIDIFile
 from io import BytesIO
 from datetime import datetime
 from midi2audio import FluidSynth
 from scipy.io import wavfile
 
+
+# --- PAGE CONFIG ---
 st.set_page_config(page_title="Generator Musik", page_icon="🎵", layout="wide")
 
+# --- INITIALIZE SESSION STATE ---
 if 'history' not in st.session_state:
     st.session_state['history'] = []
-    
-st.markdown("""
-<style>
-    /* HILANGKAN IKON RANTAI DI HEADER */
-    [data-testid="stHeaderActionElements"] {
-        display: none !important;
-    }
-</style>
-""", unsafe_allow_html=True)
+if 'current_mood' not in st.session_state:
+    st.session_state['current_mood'] = None
+if 'is_generated' not in st.session_state:
+    st.session_state['is_generated'] = False
     
 # ==========================================
 # 1. DATABASE & CONFIG
@@ -48,25 +47,29 @@ MOOD_PRESETS = {
         "scale": "Major", "prog": "The Golden Loop (I-V-vi-IV)", 
         "bpm": 120, "style": "Pop", "instr": "Grand Piano",
         "tracks": ["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"],
-        "desc": "Pop ceria dengan tempo cepat."
+        "desc": "Pop ceria dengan tempo cepat.",
+        "color": "#E6B800" # Emas Tua (Elegan)
     },
     "😢 Sedih (Sad)": {
         "scale": "Major", "prog": "Emotional Turn (vi-IV-I-V)", 
         "bpm": 65, "style": "Ballad", "instr": "Grand Piano",
         "tracks": ["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"],
-        "desc": "Ballad lambat dengan nuansa melankolis."
+        "desc": "Ballad lambat dengan nuansa melankolis.",
+        "color": "#5D6D7E" # Abu-abu Biru (Kalem)
     },
     "😎 Santai (Jazz)": {
         "scale": "Major", "prog": "Jazz Standard (ii-V-I)", 
         "bpm": 90, "style": "Jazz", "instr": "Electric Piano (Rhodes)",
         "tracks": ["Melodi", "Chord", "Bass", "Drum"], 
-        "desc": "Swing feel dengan chord 7th."
+        "desc": "Swing feel dengan chord 7th.",
+        "color": "#8D6E63" # Coklat Kopi
     },
     "😨 Tegang (Cinematic)": {
         "scale": "Harmonic Minor", "prog": "Dark Tension (i-ii-vii)", 
         "bpm": 135, "style": "Orchestra", "instr": "Violin",
         "tracks": ["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"],
-        "desc": "Nuansa orkestra yang intens dan cepat."
+        "desc": "Nuansa orkestra yang intens dan cepat.",
+        "color": "#800000" # Merah Marun Gelap
     }
 }
 
@@ -390,155 +393,289 @@ def render_audio(midi_bytes, bpm, bars):
         return None, f"System Error: {e}"
 
 # ==========================================
-# 4. WEB UI
+# 3. WEB UI 
 # ==========================================
-st.title("🎵 AI Music Composer")
 
-# HANYA 2 TAB (Simple & Advanced)
-tab1, tab2, tab3 = st.tabs(["🚀 Simple Mode", "🛠️ Advanced Mode", "📜 Riwayat Sesi"])
+# -- CSS CUSTOM --
+st.markdown("""
+<style>
+    /* BASIC SETUP */
+    [data-testid="stHeaderActionElements"] { display: none !important; }
+    .block-container { padding-top: 2rem; }
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap');
+    .stApp { background-color: #E8E8E5; }
+    h1, h2, h3 { font-family: 'Playfair Display', serif !important; color: #000; }
+    p, div, label { font-family: 'Lato', sans-serif; color: #333; }
 
-# --- FUNGSI SAVE HISTORY ---
-def save_to_history(name, midi_data, wav_data, info):
-    timestamp = datetime.now().strftime("%H:%M:%S")
-    entry = {
-        "time": timestamp,
-        "name": name,
-        "midi": midi_data,
-        "wav": wav_data,
-        "info": info
+    /* VINYL SVG CONTAINER */
+    .vinyl-wrapper {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-    st.session_state['history'].insert(0, entry)
-
-# --- TAB 1: SIMPLE ---
-with tab1:
-    st.subheader("Pilih Mood & Durasi Lagu")
-    c1, c2 = st.columns(2)
-    with c1:
-        preset_name = st.radio("Mood:", list(MOOD_PRESETS.keys()))
-        dur_sim = st.slider("Durasi Lagu (Bar):", 4, 32, 8, step=4, key="d1")
-    with c2:
-        p = MOOD_PRESETS[preset_name]
-        st.success(f"**Instrumen:** {p['instr']}")
-        st.info(f"**Deskripsi:** {p['desc']}")
-        
-    if st.button("✨ Ciptakan Musik (Instan)", type="primary"):
-        p = MOOD_PRESETS[preset_name]
-        struct_song = generate_structure("C", p["scale"], p["prog"], dur_sim, p["style"])
-        melody_song = generate_melody(struct_song, dur_sim, p["scale"])
-        
-        midi_bytes = create_final_midi(struct_song, melody_song, p["instr"], p["tracks"], p["bpm"])
-        
-        wav_data, err = render_audio(midi_bytes, p["bpm"], dur_sim)
-        if err:
-            st.error(err)
-        else:
-            st.audio(wav_data, format='audio/wav')
-                
-            col_d1, col_d2, col_d3 = st.columns([1, 1, 5], gap="small")
-            with col_d1:
-                st.download_button("💾 Download WAV", wav_data, f"ai_{p['style']}.wav", "audio/wav")
-            with col_d2:
-                st.download_button("🎹 Download MIDI", midi_bytes, f"ai_{p['style']}.mid", "audio/midi")
-                
-            save_to_history(f"{preset_name}", midi_bytes, wav_data, f"C Major - {p['style']}")
-            st.toast("✅ Lagu berhasil disimpan!")
-        
-# --- TAB 2: ADVANCED ---
-with tab2:
-    st.subheader("Konfigurasi Manual")
-    st.write("Di mode ini, kamu bebas mencampuradukkan teori musik.")
     
-    # --- EXPANDER PANDUAN (SOLUSI REQUEST KAMU) ---
-    with st.expander("Panduan Konfigurasi Manual"):
-        st.markdown("""
-        **1. Scale (Bahan Baku Nada)**
-        - **Major:** Ceria, tegas (Pop/Rock).
-        - **Minor:** Sedih, emosional.
-        - **Dorian:** Elegan, sedikit miring (Jazz).
-        - **Blues:** Keren, maskulin (Rock).
+    /* ANIMASI SPIN */
+    @keyframes spin { 
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); } 
+    }
+    
+    .spinning {
+        animation: spin 8s linear infinite;
+    }
 
-        **2. Progression (Alur Chord)**
-        - **The Golden Loop (I-V-vi-IV):** Rumus lagu Pop paling hits sedunia.
-        - **Emotional Turn (vi-IV-I-V):** Rumus lagu galau modern.
-        - **Jazz Standard (ii-V-I):** Rumus wajib Jazz (Circle of Fifths).
-        - **Dark Tension (i-ii-vii):** Menciptakan rasa takut/gelisah.
-        - **Canon Walk (I-V-vi-iii):** Menciptakan rasa klasik, anggun, dan sentimental.
+    /* TONEARM (JARUM) */
+    .tonearm {
+        position: absolute;
+        top: -30px;
+        right: -30px;
+        width: 140px;
+        height: 12px;
+        background: silver;
+        transform-origin: 80% 20%;
+        z-index: 10;
+        border-radius: 5px;
+        box-shadow: 2px 5px 10px rgba(0,0,0,0.4);
+        transition: transform 1s ease-in-out;
+    }
+    .tonearm.idle { transform: rotate(20deg); }
+    .tonearm.playing { transform: rotate(-35deg); }
+
+    .tonearm::after {
+        content: '';
+        position: absolute;
+        left: 0; top: 2px;
+        width: 25px; height: 18px;
+        background: #333;
+        transform: rotate(-15deg);
+        border-radius: 2px;
+    }
+
+    /* TOMBOL GENERATE */
+    .stButton > button {
+        width: 100%;
+        border: 1px solid #000;
+        background: transparent;
+        padding: 12px;
+        font-family: 'Playfair Display', serif;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        transition: 0.3s;
+        color: #000;
+        border-radius: 0px;
+    }
+    .stButton > button:hover {
+        background: #000 !important;
+        color: #fff !important;
+        border-color: #000 !important;
+    }
+    /* Tombol Generate Disabled */
+    .stButton > button:disabled {
+        border-color: #ccc;
+        color: #ccc;
+        cursor: not-allowed;
+    }
+    
+    /* Tombol Pilihan Mood */
+    [data-testid="stButton"] button[kind="secondary"] {
+        border: 1px solid #ccc;
+        color: #000;
+        background: transparent;
+    }
+    [data-testid="stButton"] button[kind="primary"] {
+        background: #000 !important;
+        color: #fff !important;
+        border: 1px solid #000;
+        font-weight: bold;
+    }
+    
+    /* Tombol Download Kecil */
+    .download-btn {
+        width: 100%;
+    }
+
+</style>
+""", unsafe_allow_html=True)
+
+# HEADER
+st.markdown('<h1 style="font-size: 3rem; margin-bottom: 10px;">The Studio</h1>', unsafe_allow_html=True)
+st.markdown('<div style="height: 2px; background: #000; width: 50px; margin-bottom: 40px;"></div>', unsafe_allow_html=True)
+
+# TABS
+tab1, tab2, tab3 = st.tabs(["Player Mode", "Custom Studio", "History"])
+
+# --- TAB 1: PLAYER MODE ---
+with tab1:
+    c_left, c_center, c_right = st.columns([1, 1.3, 1], gap="large")
+    
+    # --- LOGIKA TOMBOL TOGGLE (DESELECT) ---
+    def set_mood(selected_mood_name):
+        if st.session_state['current_mood'] == selected_mood_name:
+            st.session_state['current_mood'] = None
+            st.session_state['is_generated'] = False
+        else:
+            st.session_state['current_mood'] = selected_mood_name
+            st.session_state['is_generated'] = False
+
+    # --- KOLOM 1: MOOD LIST ---
+    with c_left:
+        st.markdown("#### SELECT MOOD")
+        st.caption("Klik untuk memilih, klik lagi untuk batal.")
         
-        **3. Style (Gaya Main)**
-        - **Pop:** Bass lurus, chord panjang (Block), drum standar.
-        - **Ballad:** Bass jarang, chord dipetik (Arpeggio), drum lembut.
-        - **Jazz:** Bass jalan (Walking), chord putus-putus (Syncopated), drum Swing.
-        - **Orchestra:** Fokus pada Strings section.
-        """)
+        for mood_key in MOOD_PRESETS.keys():
+            btn_type = "primary" if st.session_state['current_mood'] == mood_key else "secondary"
+            if st.button(mood_key, key=f"btn_{mood_key}", type=btn_type, use_container_width=True):
+                set_mood(mood_key)
+                st.rerun()
 
-    # INPUT FIELD
+        st.write("")
+        dur_sim = st.slider("Duration (Bars)", 4, 32, 8, step=4)
+
+    # --- KOLOM 2: VINYL ---
+    with c_center:
+        current_mood = st.session_state['current_mood']
+        is_active = (current_mood is not None)
+        
+        if is_active:
+            p = MOOD_PRESETS[current_mood]
+            accent_color = p.get("color", "#000")
+            tonearm_class = "playing" 
+            spin_class = "spinning"
+        else:
+            accent_color = "#333"
+            tonearm_class = "idle"
+            spin_class = ""
+            p = None
+
+        # SVG FIXED (NO INDENTATION ISSUE)
+        st.markdown(f'''
+        <div class="vinyl-wrapper" style="margin-top: 20px; margin-bottom: 30px;">
+            <div class="tonearm {tonearm_class}"></div>
+            <svg viewBox="0 0 200 200" class="{spin_class}" style="width:100%; height:100%;">
+                <circle cx="100" cy="100" r="98" fill="#111" />
+                <circle cx="100" cy="100" r="95" fill="none" stroke="#222" stroke-width="2" />
+                <circle cx="100" cy="100" r="85" fill="none" stroke="#1a1a1a" stroke-width="4" />
+                <circle cx="100" cy="100" r="70" fill="none" stroke="#222" stroke-width="2" />
+                <circle cx="100" cy="100" r="55" fill="none" stroke="#1a1a1a" stroke-width="3" />
+                <circle cx="100" cy="100" r="35" fill="{accent_color}" />
+                <text x="100" y="95" text-anchor="middle" fill="white" font-family="sans-serif" font-size="8" font-weight="bold">KELOMPOK 5</text>
+                <text x="100" y="110" text-anchor="middle" fill="white" font-family="sans-serif" font-size="8">RECORDS</text>
+                <circle cx="100" cy="100" r="3" fill="#eee" />
+            </svg>
+        </div>
+        ''', unsafe_allow_html=True)
+        
+        # Tombol Generate
+        if st.button("GENERATE TRACK", type="primary", disabled=not is_active, use_container_width=True):
+            if is_active:
+                with st.spinner("Composing..."):
+                    struct_song = generate_structure("C", p["scale"], p["prog"], dur_sim, p["style"])
+                    melody_song = generate_melody(struct_song, dur_sim, p["scale"])
+                    midi_bytes = create_final_midi(struct_song, melody_song, p["instr"], p["tracks"], p["bpm"])
+                    wav_data, err = render_audio(midi_bytes, p["bpm"], dur_sim)
+                    
+                    if err:
+                        st.error(err)
+                    else:
+                        st.success("Track Ready!")
+                        st.session_state['last_wav'] = wav_data
+                        st.session_state['last_midi'] = midi_bytes
+                        st.session_state['is_generated'] = True
+                        
+                        ts = datetime.now().strftime("%H:%M")
+                        entry = {"time": ts, "name": current_mood, "midi": midi_bytes, "wav": wav_data, "info": f"{p['style']}"}
+                        st.session_state['history'].insert(0, entry)
+                        st.rerun()
+
+        # PLAYER & DOWNLOAD BUTTONS (CENTER)
+        if st.session_state['is_generated'] and 'last_wav' in st.session_state:
+            st.markdown("---")
+            # Layout: Audio kiri (besar), Tombol Download kanan (kecil)
+            col_play, col_dl_wav, col_dl_mid = st.columns([3, 1, 1])
+            with col_play:
+                st.audio(st.session_state['last_wav'], format='audio/wav')
+            with col_dl_wav:
+                st.download_button("⬇ WAV", st.session_state['last_wav'], "song.wav", "audio/wav", use_container_width=True)
+            with col_dl_mid:
+                st.download_button("⬇ MIDI", st.session_state['last_midi'], "song.mid", "audio/midi", use_container_width=True)
+
+    # --- KOLOM 3: INFO DESCRIPTION ---
+    with c_right:
+        if not is_active:
+             st.markdown("""
+            <div style="text-align: center; color: #999; margin-top: 50px;">
+                <h3>Select a Mood</h3>
+                <p>Silakan pilih mood di sebelah kiri untuk meletakkan piringan hitam.</p>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown(f"""
+            <div style="text-align: left; padding-top: 20px;">
+                <h1 style="font-size: 3.5rem; line-height: 1; margin-bottom: 10px; color: #000;">
+                    {current_mood.split('(')[0]}
+                </h1>
+                <div style="font-family: 'Lato'; text-transform: uppercase; letter-spacing: 2px; color: {accent_color}; font-weight: bold; margin-bottom: 20px;">
+                    {p['style'].upper()} • {p['bpm']} BPM
+                </div>
+                <p style="font-size: 1.1rem; line-height: 1.6; color: #444; border-left: 3px solid {accent_color}; padding-left: 15px;">
+                    {p['desc']}
+                </p>
+                <br>
+                <div style="font-size: 0.9rem; color: #666;">
+                    <b>Featured Instrument:</b><br>
+                    {p['instr']}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+# --- TAB 2 & 3 (SAMA SEPERTI SEBELUMNYA) ---
+with tab2:
+    st.markdown("### Advanced Configuration")
     cc1, cc2 = st.columns(2)
     with cc1:
-        adv_key = st.selectbox("Key (Nada Dasar):", list(KEYS.keys()), help="Nada awal lagu dimulai")
-        adv_scale = st.selectbox("Scale (Bahan Nada):", list(SCALE_INTERVALS.keys()), help="Menentukan nuansa nada lagu")
-        adv_prog = st.selectbox("Chord Formula:", list(PROGRESSIONS.keys()), help="Urutan chord progression")
+        adv_key = st.selectbox("Key", list(KEYS.keys()))
+        adv_scale = st.selectbox("Scale", list(SCALE_INTERVALS.keys()))
+        adv_prog = st.selectbox("Progression", list(PROGRESSIONS.keys()))
     with cc2:
-        adv_style = st.selectbox("Style (Gaya Main):", list(GROOVE_CONFIG.keys()), help="Menentukan pola Drum dan Bass")
-        adv_instr = st.selectbox("Instrumen Melodi:", list(INSTRUMENTS.keys()), help="Pilih suara instrumen melodi")
-        adv_bpm = st.number_input("Tempo (BPM):", 60, 180, 120, help="Kecepatan lagu")
-
-    adv_bars = st.slider("Durasi lagu (Bar):", 4, 32, 8, step=4, key="adv_bars", help="Panjang lagu")
+        adv_style = st.selectbox("Style", list(GROOVE_CONFIG.keys()))
+        adv_instr = st.selectbox("Instrument", list(INSTRUMENTS.keys()))
+        adv_bpm = st.number_input("BPM", 60, 180, 120)
     
-    adv_tracks = st.multiselect("Active Tracks:", ["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"], 
-                        default=["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"],
-                        help="Pilih Track (Layer) mana saja yang ingin dimasukkan ke dalam file MIDI.")
-    
-    if st.button("🛠️ Generate Custom"):
-        struct_song = generate_structure(adv_key, adv_scale, adv_prog, adv_bars, adv_style)
-        melody_song = generate_melody(struct_song, adv_bars, adv_scale)
-        midi_custom = create_final_midi(struct_song, melody_song, adv_instr, adv_tracks, adv_bpm)
-        
-        wav_custom, err_custom = render_audio(midi_custom, adv_bpm, adv_bars)
-        
-        if err_custom:
-            st.error(err_custom)
-        else:
-            st.audio(wav_custom, format='audio/wav')
-                
-            col_c1, col_c2, col_3 = st.columns([1, 1, 5], gap="small")
-            with col_c1:
-                st.download_button("💾 Download WAV", wav_custom, "custom.wav", "audio/wav")
-            with col_c2:
-                st.download_button("🎹 Download MIDI", midi_custom, "custom.mid", "audio/midi")
-            
-            save_to_history(f"Custom {adv_style}", midi_custom, wav_custom, f"{adv_key} {adv_scale}")
-            st.toast("✅ Lagu berhasil disimpan!")
+    adv_bars = st.slider("Length (Bars)", 4, 32, 8, step=4, key="adv_b")
+    adv_tracks = st.multiselect("Layers", ["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"], default=["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"])
 
-# --- TAB 3: HISTORY ---
+    if st.button("Compose Custom Track", type="primary"):
+        with st.spinner("Composing..."):
+            struct = generate_structure(adv_key, adv_scale, adv_prog, adv_bars, adv_style)
+            melody = generate_melody(struct, adv_bars, adv_scale)
+            midi_b = create_final_midi(struct, melody, adv_instr, adv_tracks, adv_bpm)
+            wav_b, err_b = render_audio(midi_b, adv_bpm, adv_bars)
+            if err_b: st.error(err_b)
+            else:
+                st.audio(wav_b, format='audio/wav')
+                st.download_button("Download WAV", wav_b, "custom.wav", "audio/wav")
+
 with tab3:
-    st.header("📜 Riwayat Sesi Ini")
-    st.caption("Daftar lagu yang sudah kamu buat selama sesi ini. (Hilang jika browser di-refresh)")
-    
-    if len(st.session_state['history']) == 0:
-        st.info("Belum ada riwayat. Buat lagu dulu yuk!")
-    else:
-        for i, item in enumerate(st.session_state['history']):
-            with st.container():
-                c1, c2, c3 = st.columns([1, 3, 1])
-                with c1:
-                    st.write(f"**#{len(st.session_state['history'])-i}**")
-                    st.caption(item['time'])
-                with c2:
-                    st.write(f"**{item['name']}**")
-                    st.caption(item['info'])
-                    if item['wav']:
-                        st.audio(item['wav'], format='audio/wav')
-                    else:
-                        st.warning("Audio Error")
-                with c3:
-                    st.write("")
-                    if item['wav']:
-                        st.download_button("💾 Download WAV", item['wav'], f"hist_{i}.wav", "audio/wav", key=f"dww_{i}")
-                    st.download_button("🎹 Download MIDI", item['midi'], f"hist_{i}.mid", "audio/midi", key=f"dwm_{i}")
-                st.divider()
-                
+    st.markdown("### Session History")
+    for i, item in enumerate(st.session_state['history']):
+        with st.container():
+            c1, c2, c3 = st.columns([1, 3, 0.8]) 
+            with c1: st.caption(item['time'])
+            with c2: 
+                st.write(f"**{item['name']}**")
+                st.audio(item['wav'], format='audio/wav')
+            with c3:
+                st.download_button("⬇ WAV", item['wav'], f"h_{i}.wav", key=f"dlw_{i}", use_container_width=True)
+                st.download_button("⬇ MIDI", item['midi'], f"h_{i}.mid", key=f"dlm_{i}", use_container_width=True)
+            st.divider()
+
+# Footer
 st.markdown("""
-<div style="text-align: center; color: #888; font-size: 0.8rem; margin-top: 50px;">
-    © 2025 Kelompok 5 - Teknik Informatika. Dibuat dengan Python & Streamlit.
+<div style="text-align: center; color: #666; font-size: 0.8rem; margin-top: 50px; border-top: 1px solid #ccc; padding-top: 20px;">
+    © 2025 Kelompok 5 • Engineering Art
 </div>
 """, unsafe_allow_html=True)
