@@ -1,136 +1,120 @@
 import streamlit as st
 
-# Konfigurasi Halaman (Wajib di baris pertama)
+# --- KONFIGURASI HALAMAN ---
 st.set_page_config(
-    page_title="AI Music Composer",
+    page_title="Melody AI Studio",
     page_icon="🎹",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# --- CSS CUSTOM UNTUK TAMPILAN LEBIH CANTIK ---
+# --- CUSTOM CSS (AGAR TAMPILAN LEBIH MODERN) ---
 st.markdown("""
 <style>
-    /* Mengubah warna background header */
-    .stAppHeader {
-        background-color: transparent;
+    /* HILANGKAN IKON RANTAI DI HEADER */
+    [data-testid="stHeaderActionElements"] {
+        display: none !important;
     }
     
-    /* Style untuk Judul Utama */
-    .main-title {
+    /* Import Font Keren (Google Fonts) */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+    
+    /* Terapkan Font ke seluruh aplikasi */
+    html, body, [class*="css"]  {
+        font-family: 'Poppins', sans-serif;
+    }
+    
+    /* Style Judul Utama */
+    .main-header {
         font-size: 3.5rem;
         font-weight: 700;
-        color: #1E1E1E; /* Warna Judul Utama */
+        color: #4B4B4B; /* Abu Gelap */
         text-align: center;
-        margin-bottom: 0px;
-    }
-    .sub-title {
-        font-size: 1.5rem;
-        font-weight: 400;
-        color: #555;
-        text-align: center;
-        margin-bottom: 30px;
+        margin-bottom: 0;
     }
     
-    /* Style untuk Kartu Fitur */
-    .feature-card {
-        background-color: #f0f2f6;
-        border-radius: 10px;
+    .sub-header {
+        font-size: 1.2rem;
+        color: #666;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    /* Style Kotak Fitur */
+    .feature-box {
+        background-color: #F0F2F6;
         padding: 20px;
+        border-radius: 15px;
         text-align: center;
-        margin-bottom: 10px;
-        transition: transform 0.3s;
-        border: 1px solid #ddd; /* Tambah garis pinggir biar jelas */
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease;
     }
-    .feature-card:hover {
-        transform: scale(1.02);
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    .feature-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
     }
     
-    /* --- PERBAIKAN WARNA TEKS --- */
-    .feature-card h3 {
-        color: #000000 !important; /* Judul di dalam kotak WAJIB Hitam */
-        font-weight: 600;
-    }
-    .feature-card p {
-        color: #333333 !important; /* Tulisan deskripsi WAJIB Abu Gelap */
-        font-size: 1rem;
-    }
-    .feature-icon {
-        font-size: 3rem;
-        margin-bottom: 10px;
-    }
+    /* Hilangkan dekorasi link default */
+    a { text-decoration: none; }
 </style>
 """, unsafe_allow_html=True)
 
-# --- HERO SECTION (JUDUL BESAR) ---
-st.markdown('<p class="main-title">🎹 AI Music Composer</p>', unsafe_allow_html=True)
-st.markdown('<p class="sub-title">Tugas Besar Teori Bahasa Otomata (TBO) - Kelompok 5</p>', unsafe_allow_html=True)
+# --- HERO SECTION ---
+col_spacer1, col_hero, col_spacer2 = st.columns([1, 3, 1])
 
-st.divider()
+with col_hero:
+    st.markdown('<p class="main-header">🎹 Melody AI Studio</p>', unsafe_allow_html=True)
+    st.markdown('<p class="sub-header">Bangun komposisi musik tanpa batas dengan kekuatan <b>Artificial Intelligence</b> dan <b>Teori Otomata</b>.</p>', unsafe_allow_html=True)
+    st.write("---")
 
-# --- INTRO & GAMBAR ---
-col_intro, col_img = st.columns([1.5, 1], gap="large")
+# --- FITUR UNGGULAN (3 KOLOM) ---
+col1, col2, col3 = st.columns(3)
 
-with col_intro:
-    st.write("### 🚀 Selamat Datang di Masa Depan Musik!")
+with col1:
     st.markdown("""
-    Aplikasi ini mendemonstrasikan bagaimana **Ilmu Komputer** dapat berkolaborasi dengan **Seni Musik**. 
-    Kami tidak menggunakan file audio rekaman, melainkan algoritma cerdas yang "mengarang" lagu secara *real-time* detik demi detik.
-    
-    **Teknologi di balik layar:**
-    * **Finite State Automata (FSA):** Menjaga agar nada tetap harmonis dan tidak fals (sebagai "Polisi Nada").
-    * **Markov Chain:** Memberikan variasi ritme dan melodi agar terdengar manusiawi (sebagai "Jiwa Kreatif").
-    * **Pattern Recognition:** Mengatur drum dan bass agar sesuai genre (Pop/Jazz/Ballad).
+    <div class="feature-box">
+        <h1>🎭</h1>
+        <h3>Mood-Based</h3>
+        <p>Pilih suasana hati—Ceria, Sedih, atau Tegang. AI akan menyesuaikan tangga nada dan tempo secara otomatis.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown("""
+    <div class="feature-box">
+        <h1>🧠</h1>
+        <h3>Smart Logic</h3>
+        <p>Menggunakan <b>Finite State Automata</b> untuk harmoni dan <b>Markov Chain</b> untuk variasi melodi yang natural.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col3:
+    st.markdown("""
+    <div class="feature-box">
+        <h1>🎛️</h1>
+        <h3>Multi-Track</h3>
+        <p>Hasil output lengkap dengan <b>Drum, Bass, Chord, & Melodi</b>. Siap download dalam format WAV & MIDI.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+st.write("") # Spasi kosong
+st.write("")
+
+# --- SECTION CALL TO ACTION ---
+col_cta_left, col_cta_right = st.columns([2, 1])
+
+with col_cta_left:
+    st.subheader("🚀 Siap membuat lagu pertamamu?")
+    st.write("""
+    Tidak perlu keahlian musik. Cukup tentukan parameter, dan biarkan AI bekerja.
+    1.  Buka menu **🎵 Generator** di sebelah kiri.
+    2.  Pilih **Simple Mode** untuk hasil instan.
+    3.  Atau **Advanced Mode** untuk kustomisasi penuh.
     """)
     
-    st.info("💡 **Tips:** Buka menu di sebelah kiri (Sidebar) untuk mulai menggunakan aplikasi.")
-
-with col_img:
-    # PERBAIKAN DI SINI: Mengganti 'use_column_width' menjadi 'use_container_width'
-    st.image("https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=1000&auto=format&fit=crop", 
-             caption="Harmony of Code & Sound", use_container_width=True)
+with col_cta_right:
+    # Gambar ilustrasi (Ganti link jika mau)
+    st.image("https://images.unsplash.com/photo-1514320291940-7c5846613c77?q=80&w=1000&auto=format&fit=crop", caption="AI Music Generation", use_container_width=True)
 
 st.write("---")
-
-# --- FITUR HIGHLIGHTS (3 KOLOM) ---
-st.subheader("🌟 Fitur Unggulan")
-
-f1, f2, f3 = st.columns(3)
-
-with f1:
-    st.markdown("""
-    <div class="feature-card">
-        <div class="feature-icon">🎭</div>
-        <h3>Mood Detection</h3>
-        <p>Pilih suasana hati (Senang, Sedih, Tegang), dan AI akan meracik tangga nada yang sesuai secara otomatis.</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-with f2:
-    st.markdown("""
-    <div class="feature-card">
-        <div class="feature-icon">🎷</div>
-        <h3>Genre Adaptive</h3>
-        <p>Sistem pengiring cerdas yang bisa berubah gaya main (Drum & Bass) dari Pop, Ballad, hingga Jazz Swing.</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-with f3:
-    st.markdown("""
-    <div class="feature-card">
-        <div class="feature-icon">🎼</div>
-        <h3>MIDI Export</h3>
-        <p>Hasil karya AI bisa didownload dalam format MIDI Profesional untuk diedit di FL Studio atau GarageBand.</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-st.write("")
-st.write("")
-
-# --- FOOTER ---
-st.markdown("""
-<div style="text-align: center; color: #888; font-size: 0.8rem; margin-top: 50px;">
-    © 2025 Kelompok 5 - Teknik Informatika. Dibuat dengan Python & Streamlit.
-</div>
-""", unsafe_allow_html=True)
+st.markdown("<div style='text-align: center; color: grey;'>© 2025 Kelompok 5 - Tugas Besar TBO</div>", unsafe_allow_html=True)
