@@ -67,7 +67,7 @@ with col_a:
     kartu_anggota(
         nama="Fahri Khairun Ariansyah", 
         nim="1247050084", 
-        peran="Lead Developer & Logic",
+        peran="Lead Developer & Backend",
         url_foto="https://raw.githubusercontent.com/erlitaal/ai_music_composer/main/images/fahrii.png", 
         quote="People can only save themselves. One person saving another is impossible.",
         link_ig="https://www.instagram.com/p_ftttt"
@@ -75,9 +75,9 @@ with col_a:
 
 with col_b:
     kartu_anggota(
-        nama="Nama Anggota 2", 
+        nama="Erlita Amelia", 
         nim="12121212", 
-        peran="Backend & Audio Engineer",
+        peran="Data search & QA",
         url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka",
         quote="Mengubah angka menjadi nada.",
         link_ig="https://www.instagram.com/"
@@ -90,9 +90,9 @@ c1, c2, c3 = st.columns(3)
 
 with c1:
     kartu_anggota(
-        nama="Nama Anggota 3", 
+        nama="Azmi", 
         nim="12121212", 
-        peran="Frontend & UI/UX",
+        peran="Backend & Audio Engineer",
         url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Bob",
         quote="Mengubah angka menjadi nada.",
         link_ig="https://www.instagram.com/"
@@ -100,9 +100,9 @@ with c1:
 
 with c2:
     kartu_anggota(
-        nama="Nama Anggota 4", 
+        nama="Alden", 
         nim="12121212", 
-        peran="Data Analyst & QA",
+        peran="Frontend & UI/UX",
         url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Data",
         quote="Mengubah angka menjadi nada.",
         link_ig="https://www.instagram.com/"
@@ -110,9 +110,9 @@ with c2:
 
 with c3:
     kartu_anggota(
-        nama="Nama Anggota 5", 
+        nama="Maftuh", 
         nim="12121212", 
-        peran="Report & Documentation",
+        peran="Frontend & UI/UX",
         url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Jack",
         quote="Mengubah angka menjadi nada.",
         link_ig="https://www.instagram.com/"
