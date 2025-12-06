@@ -653,8 +653,13 @@ with tab2:
             wav_b, err_b = render_audio(midi_b, adv_bpm, adv_bars)
             if err_b: st.error(err_b)
             else:
-                st.audio(wav_b, format='audio/wav')
-                st.download_button("Download WAV", wav_b, "custom.wav", "audio/wav")
+                col_1, col_2, col_3 = st.columns([3, 1, 5])
+                with col_1:
+                    st.audio(wav_b, format='audio/wav')
+                with col_2:
+                    st.download_button("Download WAV", wav_b, "custom.wav", "audio/wav")
+                with col_3:
+                    st.download_button("Download MIDI", midi_b, "custom.mid", "audio/midi")
 
 with tab3:
     st.markdown("### Session History")
