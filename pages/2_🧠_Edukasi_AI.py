@@ -97,5 +97,8 @@ with st.expander("🔍 Lihat Detail Pola (Pattern Library)"):
     | **Ballad** | Soft Beat (Rimshot) | Root & 5th (Jarang) | Arpeggio (Petikan) |
     """)
 
-st.markdown("---")
-st.caption("© 2025 Kelompok 5 TBO - Dibuat dengan Python & Streamlit")
+st.markdown("""
+<div style="text-align: center; color: #888; font-size: 0.8rem; margin-top: 50px;">
+    © 2025 Kelompok 5 - Teknik Informatika. Dibuat dengan Python & Streamlit.
+</div>
+""", unsafe_allow_html=True)

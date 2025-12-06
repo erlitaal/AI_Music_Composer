@@ -536,3 +536,9 @@ with tab3:
                         st.download_button("💾 Download WAV", item['wav'], f"hist_{i}.wav", "audio/wav", key=f"dww_{i}")
                     st.download_button("🎹 Download MIDI", item['midi'], f"hist_{i}.mid", "audio/midi", key=f"dwm_{i}")
                 st.divider()
+                
+st.markdown("""
+<div style="text-align: center; color: #888; font-size: 0.8rem; margin-top: 50px;">
+    © 2025 Kelompok 5 - Teknik Informatika. Dibuat dengan Python & Streamlit.
+</div>
+""", unsafe_allow_html=True)
