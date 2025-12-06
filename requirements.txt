@@ -1,0 +1,6 @@
+streamlit
+midiutil
+numpy
+scipy
+graphviz
+midi2audio
