@@ -68,7 +68,7 @@ with col_a:
         nama="Fahri Khairun Ariansyah", 
         nim="1247050084", 
         peran="Lead Developer & Logic",
-        url_foto="images/Fahrii.jpg", 
+        url_foto="https://raw.githubusercontent.com/erlitaal/ai_music_composer/main/images/Fahrii.jpg", 
         quote="People can only save themselves. One person saving another is impossible.",
         link_ig="https://www.instagram.com/p_ftttt"
     )
