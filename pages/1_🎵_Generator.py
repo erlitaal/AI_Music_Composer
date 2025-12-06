@@ -43,28 +43,28 @@ SCALE_INTERVALS = {
 }
 
 MOOD_PRESETS = {
-    "😊 Ceria (Happy)": {
+    "Morning Pop": {
         "scale": "Major", "prog": "The Golden Loop (I-V-vi-IV)", 
         "bpm": 120, "style": "Pop", "instr": "Grand Piano",
         "tracks": ["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"],
         "desc": "Pop ceria dengan tempo cepat.",
         "color": "#E6B800" # Emas Tua (Elegan)
     },
-    "😢 Sedih (Sad)": {
+    "Melancholy": {
         "scale": "Major", "prog": "Emotional Turn (vi-IV-I-V)", 
         "bpm": 65, "style": "Ballad", "instr": "Grand Piano",
         "tracks": ["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"],
         "desc": "Ballad lambat dengan nuansa melankolis.",
         "color": "#5D6D7E" # Abu-abu Biru (Kalem)
     },
-    "😎 Santai (Jazz)": {
+    "Midnight Jazz": {
         "scale": "Major", "prog": "Jazz Standard (ii-V-I)", 
         "bpm": 90, "style": "Jazz", "instr": "Electric Piano (Rhodes)",
         "tracks": ["Melodi", "Chord", "Bass", "Drum"], 
         "desc": "Swing feel dengan chord 7th.",
         "color": "#8D6E63" # Coklat Kopi
     },
-    "😨 Tegang (Cinematic)": {
+    "The Epic Saga": {
         "scale": "Harmonic Minor", "prog": "Dark Tension (i-ii-vii)", 
         "bpm": 135, "style": "Orchestra", "instr": "Violin",
         "tracks": ["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"],
@@ -465,7 +465,7 @@ st.markdown("""
         text-transform: uppercase;
         letter-spacing: 2px;
         transition: 0.3s;
-        color: #000;
+        color: #fff !important;
         border-radius: 0px;
     }
     .stButton > button:hover {
@@ -502,11 +502,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # HEADER
-st.markdown('<h1 style="font-size: 3rem; margin-bottom: 10px;">The Studio</h1>', unsafe_allow_html=True)
+st.markdown('<h1 style="font-size: 3rem; margin-bottom: 10px;">Generator</h1>', unsafe_allow_html=True)
 st.markdown('<div style="height: 2px; background: #000; width: 50px; margin-bottom: 40px;"></div>', unsafe_allow_html=True)
 
 # TABS
-tab1, tab2, tab3 = st.tabs(["Player Mode", "Custom Studio", "History"])
+tab1, tab2, tab3 = st.tabs(["Simple Mode", "Advanced Mode", "History"])
 
 # --- TAB 1: PLAYER MODE ---
 with tab1:
@@ -593,11 +593,9 @@ with tab1:
 
         # PLAYER & DOWNLOAD BUTTONS (CENTER)
         if st.session_state['is_generated'] and 'last_wav' in st.session_state:
-            st.markdown("---")
             # Layout: Audio kiri (besar), Tombol Download kanan (kecil)
-            col_play, col_dl_wav, col_dl_mid = st.columns([3, 1, 1])
-            with col_play:
-                st.audio(st.session_state['last_wav'], format='audio/wav')
+            st.audio(st.session_state['last_wav'], format='audio/wav')
+            col_dl_wav, col_dl_mid = st.columns([2, 2], gap="small")
             with col_dl_wav:
                 st.download_button("⬇ WAV", st.session_state['last_wav'], "song.wav", "audio/wav", use_container_width=True)
             with col_dl_mid:
@@ -609,7 +607,7 @@ with tab1:
              st.markdown("""
             <div style="text-align: center; color: #999; margin-top: 50px;">
                 <h3>Select a Mood</h3>
-                <p>Silakan pilih mood di sebelah kiri untuk meletakkan piringan hitam.</p>
+                <p>Silakan pilih mood di sebelah kiri.</p>
             </div>
             """, unsafe_allow_html=True)
         else:
@@ -632,7 +630,6 @@ with tab1:
             </div>
             """, unsafe_allow_html=True)
 
-# --- TAB 2 & 3 (SAMA SEPERTI SEBELUMNYA) ---
 with tab2:
     st.markdown("### Advanced Configuration")
     cc1, cc2 = st.columns(2)
