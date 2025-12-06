@@ -65,12 +65,12 @@ col_a, col_b = st.columns(2)
 with col_a:
     # Ganti URL ini dengan nama file lokal nanti (misal: "images/foto_budi.jpg")
     kartu_anggota(
-        nama="Nama Anggota", 
-        nim="10101010", 
+        nama="Fahri Khairun Ariansyah", 
+        nim="1247050084", 
         peran="Lead Developer & Logic",
-        url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix", 
-        quote="Coding is poetry, music is math.",
-        link_ig="https://www.instagram.com/instagram"
+        url_foto="images/Fahrii.jpg", 
+        quote="People can only save themselves. One person saving another is impossible.",
+        link_ig="https://www.instagram.com/p_ftttt"
     )
 
 with col_b:
