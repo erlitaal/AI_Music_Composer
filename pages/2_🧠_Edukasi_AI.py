@@ -3,6 +3,9 @@ import graphviz
 
 st.markdown("""
 <style>
+    /* IMPORT GOOGLE FONT - DROID SERIF */
+    @import url('https://fonts.googleapis.com/css2?family=Droid+Serif:wght@700&display=swap');
+    
     /* HILANGKAN IKON RANTAI DI HEADER */
     [data-testid="stHeaderActionElements"] {
         display: none !important;
@@ -11,16 +14,48 @@ st.markdown("""
     /* BACKGROUND CREAM MUDA DENGAN SENTUHAN ABU-ABU */
     .stApp {
         background-color: #FAF9F6 !important;  /* Cream muda dengan sedikit abu-abu */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
-    /* WARNA TEKS UTAMA - HITAM SOFT */
-    h1, h2, h3, h4, h5, h6, p, div, span, label, .stMarkdown, .stTitle, .stHeader {
-        color: #2C3E50 !important;  /* Dark blue-gray, lebih soft dari hitam penuh */
+    /* JUDUL UTAMA - DROID SERIF BOLD */
+    h1 {
+        font-family: 'Droid Serif', serif !important;
+        font-weight: 700 !important;
+        color: #2C3E50 !important;
+        font-size: 2.5rem !important;
+        margin-bottom: 1rem !important;
+        letter-spacing: -0.5px;
+    }
+    
+    /* JUDUL BAGIAN - DROID SERIF BOLD */
+    h2 {
+        font-family: 'Droid Serif', serif !important;
+        font-weight: 700 !important;
+        color: #2C3E50 !important;
+        font-size: 1.8rem !important;
+        margin-top: 2rem !important;
+        margin-bottom: 1rem !important;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #ECF0F1;
+    }
+    
+    /* SUB-JUDUL */
+    h3, h4, h5, h6 {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+        color: #2C3E50 !important;
+        font-weight: 600;
+    }
+    
+    /* WARNA TEKS UTAMA */
+    p, div, span, label, .stMarkdown, .stTitle, .stHeader {
+        color: #2C3E50 !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
     /* TEKS BOLD/TEBAL */
     strong, b {
         color: #1A1A1A !important;  /* Sedikit lebih gelap untuk bold text */
+        font-weight: 700;
     }
     
     /* WARNA DIVIDER - ABU-ABU MUDA */
@@ -33,6 +68,17 @@ st.markdown("""
     /* WARNA METRIC CARD */
     [data-testid="stMetricValue"], [data-testid="stMetricLabel"] {
         color: #2C3E50 !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    [data-testid="stMetricValue"] {
+        font-size: 2rem !important;
+        font-weight: 700;
+    }
+    
+    [data-testid="stMetricLabel"] {
+        font-size: 0.9rem !important;
+        font-weight: 600;
     }
     
     [data-testid="stMetricDelta"] svg {
@@ -51,6 +97,14 @@ st.markdown("""
     
     .stAlert [data-testid="stMarkdownContainer"] {
         color: #2C3E50 !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    /* JUDUL DALAM ALERT BOX */
+    .stAlert h3, .stAlert h4 {
+        font-family: 'Droid Serif', serif !important;
+        font-weight: 700 !important;
+        margin-top: 0;
     }
     
     /* INFO BOX - Blue soft */
@@ -74,7 +128,8 @@ st.markdown("""
         color: #2C3E50 !important;
         border: 1px solid #ECF0F1 !important;
         border-radius: 6px;
-        font-weight: 500;
+        font-weight: 600;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
     .streamlit-expanderContent {
@@ -90,24 +145,28 @@ st.markdown("""
         border: 1px solid #ECF0F1 !important;
         border-radius: 6px;
         overflow: hidden;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
     th {
         background-color: #F8F9FA !important;
         color: #2C3E50 !important;
-        font-weight: 600;
+        font-weight: 700;
         border-bottom: 2px solid #ECF0F1 !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
     td {
         color: #2C3E50 !important;
         border-bottom: 1px solid #ECF0F1 !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
     /* CAPTION TEXT - Abu-abu medium */
     .stCaption {
         color: #7F8C8D !important;
         font-size: 0.85rem;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
     /* QUOTE/BLOCKQUOTE STYLE */
@@ -120,19 +179,12 @@ st.markdown("""
         background-color: rgba(236, 240, 241, 0.3);
         padding: 0.5rem 1rem;
         border-radius: 0 4px 4px 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
     /* TITLE SPACING */
     .stTitle h1 {
         margin-bottom: 1.5rem !important;
-    }
-    
-    /* SUBTITLE */
-    .stMarkdown h2 {
-        margin-top: 2rem !important;
-        margin-bottom: 1rem !important;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid #ECF0F1;
     }
     
     /* GRAPHVIZ STYLING */
@@ -142,6 +194,11 @@ st.markdown("""
         padding: 1rem;
         background-color: white;
         box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    /* TEXT DALAM GRAPHVIZ */
+    .stGraphviz text {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
     }
     
     /* METRIC CARDS STYLING */
@@ -161,6 +218,7 @@ st.markdown("""
         margin-top: 3rem;
         padding: 1.5rem 0;
         border-top: 1px solid #ECF0F1;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
     /* SCROLLBAR STYLING */
@@ -179,6 +237,11 @@ st.markdown("""
     
     ::-webkit-scrollbar-thumb:hover {
         background: #95A5A6;
+    }
+    
+    /* EMOJI DI JUDUL */
+    h1 .emoji, h2 .emoji {
+        font-family: "Segoe UI Emoji", "Apple Color Emoji", sans-serif !important;
     }
 </style>
 """, unsafe_allow_html=True)
