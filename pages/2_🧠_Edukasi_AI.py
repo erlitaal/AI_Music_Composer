@@ -37,15 +37,7 @@ st.markdown("""
         opacity: 0.5;
     }
     
-    /* Container untuk graphviz */
-    .graphviz-container {
-        border: 1px solid #ECF0F1;
-        border-radius: 12px;
-        padding: 1.5rem;
-        background-color: white;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        margin: 1rem 0;
-    }
+    /* HAPUS CSS untuk graphviz-container */
     
     /* Alert boxes styling sederhana - tanpa mengubah struktur Streamlit */
     div[data-testid="stAlert"] {
@@ -102,13 +94,12 @@ st.divider()
 st.header("1. Finite State Automata (FSA)")
 st.info("**Peran:** Polisi Lalu Lintas Nada 👮‍♂️")
 
-col1, col2 = st.columns([1.5, 1])
+col1, col2 = st.columns([2, 1])
 
 with col1:
     st.markdown("""
     Dalam mata kuliah TBO, FSA didefinisikan sebagai mesin yang memiliki **State** dan **Transisi**. 
     Di aplikasi ini:
-    
     * **State ($Q$):** Adalah nada-nada dalam piano (C, D, E, F, G, A, B).
     * **Input ($\Sigma$):** Adalah aturan Mood (Mayor/Minor).
     * **Fungsi Transisi ($\delta$):** Logika yang *melarang* AI memilih nada fals.
@@ -118,24 +109,24 @@ with col1:
     """)
 
 with col2:
-    st.markdown('<div class="graphviz-container">', unsafe_allow_html=True)
-    st.markdown('<div style="text-align: center; font-weight: bold; color: #2C3E50; margin-bottom: 1rem;">Visualisasi FSA Sederhana</div>', unsafe_allow_html=True)
-    
+    st.caption("Visualisasi FSA Sederhana:")
+    # Membuat Diagram FSA menggunakan Graphviz
     graph = graphviz.Digraph()
-    graph.attr(rankdir='LR', size='8,4')
+    graph.attr(rankdir='LR', size='3')
     
+    # Node
     graph.node('C', 'Start (C)', shape='doublecircle')
-    graph.node('D', 'Nada D', shape='circle')
-    graph.node('E', 'Nada E', shape='circle')
-    graph.node('F', 'Nada F', shape='circle')
+    graph.node('D', 'Nada D')
+    graph.node('E', 'Nada E')
+    graph.node('F', 'Nada F')
     
-    graph.edge('C', 'D', label=' 1')
-    graph.edge('D', 'E', label=' 1')
-    graph.edge('E', 'F', label=' 0.5')
-    graph.edge('F', 'C', label=' Loop')
+    # Edge (Transisi)
+    graph.edge('C', 'D', label='1')
+    graph.edge('D', 'E', label='1')
+    graph.edge('E', 'F', label='0.5')
+    graph.edge('F', 'C', label='Loop')
     
-    st.graphviz_chart(graph, use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.graphviz_chart(graph)
 
 st.divider()
 
@@ -169,7 +160,7 @@ st.markdown("""
 Berbeda dengan melodi yang *Generative* (dikarang di tempat), instrumen pengiring (Drum, Bass, Chord) menggunakan **Pola Statis (Fixed Pattern)** untuk menjaga identitas genre.
 """)
 
-with st.expander("🔍 Lihat Detail Pola (Pattern Library)", expanded=False):
+with st.expander("🔍 Lihat Detail Pola (Pattern Library)"):
     st.markdown("""
     | Genre | Pola Drum | Gaya Bass | Gaya Piano |
     | :--- | :--- | :--- | :--- |
