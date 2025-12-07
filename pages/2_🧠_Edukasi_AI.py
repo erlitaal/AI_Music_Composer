@@ -13,7 +13,7 @@ st.markdown("""
     
     /* BACKGROUND CREAM MUDA DENGAN SENTUHAN ABU-ABU */
     .stApp {
-        background-color: #FAF9F6 !important;  /* Cream muda dengan sedikit abu-abu */
+        background-color: #FAF9F6 !important;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
@@ -54,13 +54,13 @@ st.markdown("""
     
     /* TEKS BOLD/TEBAL */
     strong, b {
-        color: #1A1A1A !important;  /* Sedikit lebih gelap untuk bold text */
+        color: #1A1A1A !important;
         font-weight: 700;
     }
     
     /* WARNA DIVIDER - ABU-ABU MUDA */
     hr {
-        border-color: #BDC3C7 !important;  /* Abu-abu muda */
+        border-color: #BDC3C7 !important;
         opacity: 0.5;
         margin: 2rem 0;
     }
@@ -182,23 +182,36 @@ st.markdown("""
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
-    /* TITLE SPACING */
-    .stTitle h1 {
-        margin-bottom: 1.5rem !important;
-    }
-    
-    /* GRAPHVIZ STYLING */
-    .stGraphviz {
+    /* GRAPHVIZ CONTAINER - PERBESAR DAN STYLING */
+    .graphviz-container {
         border: 1px solid #ECF0F1;
-        border-radius: 8px;
-        padding: 1rem;
+        border-radius: 12px;
+        padding: 1.5rem;
         background-color: white;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        margin: 1.5rem 0;
     }
     
-    /* TEXT DALAM GRAPHVIZ */
-    .stGraphviz text {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    .graphviz-title {
+        font-family: 'Droid Serif', serif !important;
+        font-weight: 700 !important;
+        color: #2C3E50 !important;
+        font-size: 1.2rem !important;
+        margin-bottom: 1rem !important;
+        text-align: center;
+    }
+    
+    /* STYLING KHUSUS UNTUK GRAPHVIZ CHART */
+    .stGraphviz {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 300px;
+    }
+    
+    .stGraphviz svg {
+        max-width: 100% !important;
+        height: auto !important;
     }
     
     /* METRIC CARDS STYLING */
@@ -243,6 +256,19 @@ st.markdown("""
     h1 .emoji, h2 .emoji {
         font-family: "Segoe UI Emoji", "Apple Color Emoji", sans-serif !important;
     }
+    
+    /* SPACING UNTUK KOLOM */
+    .stColumn {
+        padding: 0 1rem;
+    }
+    
+    .stColumn:first-child {
+        padding-left: 0;
+    }
+    
+    .stColumn:last-child {
+        padding-right: 0;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -256,14 +282,17 @@ Aplikasi ini bukan sekadar pemutar musik acak. Kami menggabungkan **Teori Musik*
 st.divider()
 
 # --- BAGIAN 1: FSA ---
-col1, col2 = st.columns([2, 1])
+st.header("1. Finite State Automata (FSA)")
+st.info("**Peran:** Polisi Lalu Lintas Nada 👮‍♂️")
+
+# BUAT LAYOUT YANG LEBIH BAIK UNTUK FSA
+col1, col2 = st.columns([1.5, 1])
 
 with col1:
-    st.header("1. Finite State Automata (FSA)")
-    st.info("**Peran:** Polisi Lalu Lintas Nada 👮‍♂️")
     st.markdown("""
     Dalam mata kuliah TBO, FSA didefinisikan sebagai mesin yang memiliki **State** dan **Transisi**. 
     Di aplikasi ini:
+    
     * **State ($Q$):** Adalah nada-nada dalam piano (C, D, E, F, G, A, B).
     * **Input ($\Sigma$):** Adalah aturan Mood (Mayor/Minor).
     * **Fungsi Transisi ($\delta$):** Logika yang *melarang* AI memilih nada fals.
@@ -273,24 +302,84 @@ with col1:
     """)
 
 with col2:
-    st.caption("Visualisasi FSA Sederhana:")
-    # Membuat Diagram FSA menggunakan Graphviz
+    # TEMPATKAN VISUALISASI FSA DI DALAM CONTAINER KHUSUS
+    st.markdown('<div class="graphviz-container">', unsafe_allow_html=True)
+    st.markdown('<div class="graphviz-title">Visualisasi FSA Sederhana</div>', unsafe_allow_html=True)
+    
+    # Membuat Diagram FSA yang LEBIH BESAR dan JELAS
     graph = graphviz.Digraph()
-    graph.attr(rankdir='LR', size='3')
+    graph.attr(
+        rankdir='LR',
+        size='8,4',  # Perbesar ukuran
+        dpi='300',   # Tingkatkan resolusi
+        pad='0.5'
+    )
     
-    # Node
-    graph.node('C', 'Start (C)', shape='doublecircle')
-    graph.node('D', 'Nada D')
-    graph.node('E', 'Nada E')
-    graph.node('F', 'Nada F')
+    # Node dengan styling yang lebih baik
+    graph.node('C', 'Start (C)', 
+               shape='doublecircle',
+               style='filled',
+               fillcolor='#3498DB',
+               fontcolor='white',
+               fontsize='14',
+               width='1.2',
+               height='1.2')
     
-    # Edge (Transisi)
-    graph.edge('C', 'D', label='1')
-    graph.edge('D', 'E', label='1')
-    graph.edge('E', 'F', label='0.5')
-    graph.edge('F', 'C', label='Loop')
+    graph.node('D', 'Nada D',
+               shape='circle',
+               style='filled',
+               fillcolor='#2ECC71',
+               fontcolor='white',
+               fontsize='12',
+               width='1',
+               height='1')
     
-    st.graphviz_chart(graph)
+    graph.node('E', 'Nada E',
+               shape='circle',
+               style='filled',
+               fillcolor='#E74C3C',
+               fontcolor='white',
+               fontsize='12',
+               width='1',
+               height='1')
+    
+    graph.node('F', 'Nada F',
+               shape='circle',
+               style='filled',
+               fillcolor='#F39C12',
+               fontcolor='white',
+               fontsize='12',
+               width='1',
+               height='1')
+    
+    # Edge (Transisi) dengan styling yang lebih baik
+    graph.edge('C', 'D', 
+               label='  Transisi 1',
+               fontsize='11',
+               color='#2C3E50',
+               penwidth='2')
+    
+    graph.edge('D', 'E', 
+               label='  Transisi 1',
+               fontsize='11',
+               color='#2C3E50',
+               penwidth='2')
+    
+    graph.edge('E', 'F', 
+               label='  Transisi 0.5',
+               fontsize='11',
+               color='#2C3E50',
+               penwidth='2')
+    
+    graph.edge('F', 'C', 
+               label='  Loop Back',
+               fontsize='11',
+               color='#9B59B6',
+               penwidth='2',
+               style='dashed')
+    
+    st.graphviz_chart(graph, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 st.divider()
 
