@@ -42,31 +42,48 @@ st.markdown("""
         color: #1A1A1A !important;
     }
     
-    /* ALERT BOXES - Warna abu-abu yang cocok dengan tema cream */
-    .stAlert {
+    /* ALERT BOXES - PERBAIKAN SELECTOR */
+    /* Hapus warna default Streamlit */
+    div[data-testid="stAlert"] > div:first-child {
+        background-color: transparent !important;
+    }
+    
+    /* Style untuk semua alert boxes */
+    div[data-testid="stAlert"] {
         background-color: rgba(255, 255, 255, 0.9) !important;
         border: 1px solid #D1D5D8 !important;
-        border-left: 4px solid;
+        border-left: 4px solid #95A5A6 !important; /* Default abu-abu */
         border-radius: 8px;
-        padding: 1rem;
-        margin: 1rem 0;
+        padding: 1rem !important;
+        margin: 1rem 0 !important;
     }
     
+    /* Hapus icon default */
+    div[data-testid="stAlert"] > div:first-child > div:first-child {
+        display: none !important;
+    }
+    
+    /* WARNA BORDER KIRI BERDASARKAN JENIS ALERT */
+    /* Info (biru asli) -> Abu-abu medium */
+    div[data-testid="stAlert"]:has(svg[aria-label="Info"]) {
+        border-left-color: #7F8C8D !important;
+    }
+    
+    /* Warning (kuning asli) -> Abu-abu muda */
+    div[data-testid="stAlert"]:has(svg[aria-label="Warning"]) {
+        border-left-color: #95A5A6 !important;
+    }
+    
+    /* Success (hijau asli) -> Abu-abu gelap */
+    div[data-testid="stAlert"]:has(svg[aria-label="Success"]) {
+        border-left-color: #5D6D7E !important;
+    }
+    
+    /* Text dalam alert */
     .stAlert [data-testid="stMarkdownContainer"] {
         color: #2C3E50 !important;
-    }
-    
-    /* Warna border kiri untuk alert boxes - abu-abu dengan variasi */
-    div[data-testid="stAlert"]:has(div:contains("Polisi")) {
-        border-left-color: #7F8C8D !important; /* Abu-abu medium */
-    }
-    
-    div[data-testid="stAlert"]:has(div:contains("Pengarang")) {
-        border-left-color: #95A5A6 !important; /* Abu-abu muda */
-    }
-    
-    div[data-testid="stAlert"]:has(div:contains("Penentu")) {
-        border-left-color: #5D6D7E !important; /* Abu-abu gelap */
+        margin-left: 0 !important;
+        padding-left: 0 !important;
     }
     
     /* Judul dalam alert boxes */
@@ -138,7 +155,7 @@ st.markdown("""
         margin: 1rem 0;
     }
     
-    /* EXPANDER STYLING - DIPERBAIKI */
+    /* EXPANDER STYLING */
     .streamlit-expanderHeader {
         background-color: rgba(255, 255, 255, 0.95) !important;
         color: #2C3E50 !important;
@@ -160,7 +177,6 @@ st.markdown("""
         padding: 1rem !important;
     }
     
-    /* PERBAIKAN: WARNA TEKS DALAM EXPANDER - GANTI SELECTOR */
     div[data-testid="stExpander"] .stMarkdown,
     div[data-testid="stExpander"] p,
     div[data-testid="stExpander"] div,
@@ -169,7 +185,6 @@ st.markdown("""
         color: #2C3E50 !important;
     }
     
-    /* TABLE STYLING DALAM EXPANDER */
     div[data-testid="stExpander"] table {
         background-color: white !important;
         border: 1px solid #ECF0F1 !important;
@@ -194,10 +209,9 @@ st.markdown("""
     }
     
     div[data-testid="stExpander"] tr:hover {
-        background-color: rgba(245, 245, 220, 0.3) !important; /* Cream transparan */
+        background-color: rgba(245, 245, 220, 0.3) !important;
     }
     
-    /* TEKS BOLD DALAM EXPANDER */
     div[data-testid="stExpander"] strong {
         color: #1A1A1A !important;
     }
