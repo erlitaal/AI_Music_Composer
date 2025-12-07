@@ -31,7 +31,7 @@ st.markdown("""
         border-bottom: 2px solid #ECF0F1;
     }
     
-    /* WARNA TEKS UTAMA - INI PENTING! */
+    /* WARNA TEKS UTAMA */
     .stMarkdown, .stMarkdown p, .stMarkdown div, .stMarkdown span {
         color: #2C3E50 !important;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -129,6 +129,7 @@ st.markdown("""
         margin: 1rem 0;
     }
     
+    /* FIXED: WARNA TEKS DALAM EXPANDER - DIUBAH JADI LEBIH GELAP */
     .streamlit-expanderHeader {
         background-color: rgba(255, 255, 255, 0.9) !important;
         color: #2C3E50 !important;
@@ -138,17 +139,27 @@ st.markdown("""
     }
     
     .streamlit-expanderContent {
-        background-color: rgba(255, 255, 255, 0.8) !important;
+        background-color: rgba(255, 255, 255, 0.9) !important;
         border: 1px solid #ECF0F1 !important;
         border-top: none;
         border-radius: 0 0 6px 6px;
     }
     
+    /* WARNA TEKS DALAM EXPANDER CONTENT - DIPERBAIKI */
+    .streamlit-expanderContent .stMarkdown,
+    .streamlit-expanderContent p,
+    .streamlit-expanderContent div,
+    .streamlit-expanderContent span {
+        color: #2C3E50 !important;  /* WARNA GELAP */
+    }
+    
+    /* TABLE STYLING DALAM EXPANDER */
     table {
-        background-color: rgba(255, 255, 255, 0.9) !important;
+        background-color: rgba(255, 255, 255, 0.95) !important;
         border: 1px solid #ECF0F1 !important;
         border-radius: 6px;
         overflow: hidden;
+        margin: 0.5rem 0;
     }
     
     th {
@@ -156,11 +167,23 @@ st.markdown("""
         color: #2C3E50 !important;
         font-weight: 700;
         border-bottom: 2px solid #ECF0F1 !important;
+        padding: 12px 16px !important;
     }
     
     td {
         color: #2C3E50 !important;
         border-bottom: 1px solid #ECF0F1 !important;
+        padding: 10px 16px !important;
+    }
+    
+    /* TEKS BOLD DALAM TABLE */
+    table strong, table b {
+        color: #1A1A1A !important;
+    }
+    
+    /* HOVER EFFECT UNTUK TABLE ROWS */
+    tr:hover {
+        background-color: rgba(236, 240, 241, 0.5) !important;
     }
 </style>
 """, unsafe_allow_html=True)
