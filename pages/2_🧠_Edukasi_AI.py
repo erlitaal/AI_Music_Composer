@@ -32,7 +32,8 @@ st.markdown("""
     }
     
     /* WARNA TEKS UTAMA */
-    .stMarkdown, .stMarkdown p, .stMarkdown div, .stMarkdown span {
+    .stMarkdown, .stMarkdown p, .stMarkdown div, .stMarkdown span,
+    p, div, span, label {
         color: #2C3E50 !important;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
@@ -41,9 +42,10 @@ st.markdown("""
         color: #1A1A1A !important;
     }
     
+    /* ALERT BOXES - Warna abu-abu yang cocok dengan tema cream */
     .stAlert {
-        background-color: rgba(255, 255, 255, 0.85) !important;
-        border: 1px solid #ECF0F1 !important;
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        border: 1px solid #D1D5D8 !important;
         border-left: 4px solid;
         border-radius: 8px;
         padding: 1rem;
@@ -54,16 +56,23 @@ st.markdown("""
         color: #2C3E50 !important;
     }
     
+    /* Warna border kiri untuk alert boxes - abu-abu dengan variasi */
     div[data-testid="stAlert"]:has(div:contains("Polisi")) {
-        border-left-color: #3498DB !important;
+        border-left-color: #7F8C8D !important; /* Abu-abu medium */
     }
     
     div[data-testid="stAlert"]:has(div:contains("Pengarang")) {
-        border-left-color: #E67E22 !important;
+        border-left-color: #95A5A6 !important; /* Abu-abu muda */
     }
     
     div[data-testid="stAlert"]:has(div:contains("Penentu")) {
-        border-left-color: #2ECC71 !important;
+        border-left-color: #5D6D7E !important; /* Abu-abu gelap */
+    }
+    
+    /* Judul dalam alert boxes */
+    .stAlert strong {
+        color: #2C3E50 !important;
+        font-size: 1.1rem;
     }
     
     hr { 
@@ -129,40 +138,48 @@ st.markdown("""
         margin: 1rem 0;
     }
     
-    /* FIXED: WARNA TEKS DALAM EXPANDER - DIUBAH JADI LEBIH GELAP */
+    /* EXPANDER STYLING - DIPERBAIKI */
     .streamlit-expanderHeader {
-        background-color: rgba(255, 255, 255, 0.9) !important;
+        background-color: rgba(255, 255, 255, 0.95) !important;
         color: #2C3E50 !important;
-        border: 1px solid #ECF0F1 !important;
+        border: 1px solid #D1D5D8 !important;
         border-radius: 6px;
         font-weight: 600;
+        margin: 1rem 0;
+    }
+    
+    .streamlit-expanderHeader:hover {
+        background-color: white !important;
     }
     
     .streamlit-expanderContent {
-        background-color: rgba(255, 255, 255, 0.9) !important;
-        border: 1px solid #ECF0F1 !important;
-        border-top: none;
+        background-color: white !important;
+        border: 1px solid #D1D5D8 !important;
+        border-top: none !important;
         border-radius: 0 0 6px 6px;
+        padding: 1rem !important;
     }
     
-    /* WARNA TEKS DALAM EXPANDER CONTENT - DIPERBAIKI */
-    .streamlit-expanderContent .stMarkdown,
-    .streamlit-expanderContent p,
-    .streamlit-expanderContent div,
-    .streamlit-expanderContent span {
-        color: #2C3E50 !important;  /* WARNA GELAP */
+    /* PERBAIKAN: WARNA TEKS DALAM EXPANDER - GANTI SELECTOR */
+    div[data-testid="stExpander"] .stMarkdown,
+    div[data-testid="stExpander"] p,
+    div[data-testid="stExpander"] div,
+    div[data-testid="stExpander"] span,
+    div[data-testid="stExpander"] strong {
+        color: #2C3E50 !important;
     }
     
     /* TABLE STYLING DALAM EXPANDER */
-    table {
-        background-color: rgba(255, 255, 255, 0.95) !important;
+    div[data-testid="stExpander"] table {
+        background-color: white !important;
         border: 1px solid #ECF0F1 !important;
         border-radius: 6px;
         overflow: hidden;
         margin: 0.5rem 0;
+        width: 100%;
     }
     
-    th {
+    div[data-testid="stExpander"] th {
         background-color: #F8F9FA !important;
         color: #2C3E50 !important;
         font-weight: 700;
@@ -170,20 +187,19 @@ st.markdown("""
         padding: 12px 16px !important;
     }
     
-    td {
+    div[data-testid="stExpander"] td {
         color: #2C3E50 !important;
         border-bottom: 1px solid #ECF0F1 !important;
         padding: 10px 16px !important;
     }
     
-    /* TEKS BOLD DALAM TABLE */
-    table strong, table b {
-        color: #1A1A1A !important;
+    div[data-testid="stExpander"] tr:hover {
+        background-color: rgba(245, 245, 220, 0.3) !important; /* Cream transparan */
     }
     
-    /* HOVER EFFECT UNTUK TABLE ROWS */
-    tr:hover {
-        background-color: rgba(236, 240, 241, 0.5) !important;
+    /* TEKS BOLD DALAM EXPANDER */
+    div[data-testid="stExpander"] strong {
+        color: #1A1A1A !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -268,7 +284,7 @@ st.markdown("""
 Berbeda dengan melodi yang *Generative* (dikarang di tempat), instrumen pengiring (Drum, Bass, Chord) menggunakan **Pola Statis (Fixed Pattern)** untuk menjaga identitas genre.
 """)
 
-with st.expander("🔍 Lihat Detail Pola (Pattern Library)"):
+with st.expander("🔍 Lihat Detail Pola (Pattern Library)", expanded=False):
     st.markdown("""
     | Genre | Pola Drum | Gaya Bass | Gaya Piano |
     | :--- | :--- | :--- | :--- |
