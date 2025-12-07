@@ -7,7 +7,10 @@ st.markdown("""
     
     [data-testid="stHeaderActionElements"] { display: none !important; }
     
-    .stApp { background-color: #FAF9F6 !important; }
+    .stApp { 
+        background-color: #FAF9F6 !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
     
     h1 { 
         font-family: 'Droid Serif', serif !important;
@@ -23,8 +26,19 @@ st.markdown("""
         color: #2C3E50 !important;
         font-size: 1.8rem !important;
         margin-top: 2rem !important;
+        margin-bottom: 1rem !important;
         padding-bottom: 0.5rem;
         border-bottom: 2px solid #ECF0F1;
+    }
+    
+    /* WARNA TEKS UTAMA - INI PENTING! */
+    .stMarkdown, .stMarkdown p, .stMarkdown div, .stMarkdown span {
+        color: #2C3E50 !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    strong, b {
+        color: #1A1A1A !important;
     }
     
     .stAlert {
@@ -33,9 +47,30 @@ st.markdown("""
         border-left: 4px solid;
         border-radius: 8px;
         padding: 1rem;
+        margin: 1rem 0;
     }
     
-    hr { border-color: #BDC3C7 !important; margin: 2rem 0; }
+    .stAlert [data-testid="stMarkdownContainer"] {
+        color: #2C3E50 !important;
+    }
+    
+    div[data-testid="stAlert"]:has(div:contains("Polisi")) {
+        border-left-color: #3498DB !important;
+    }
+    
+    div[data-testid="stAlert"]:has(div:contains("Pengarang")) {
+        border-left-color: #E67E22 !important;
+    }
+    
+    div[data-testid="stAlert"]:has(div:contains("Penentu")) {
+        border-left-color: #2ECC71 !important;
+    }
+    
+    hr { 
+        border-color: #BDC3C7 !important; 
+        margin: 2rem 0; 
+        opacity: 0.5;
+    }
     
     .graphviz-container {
         border: 1px solid #ECF0F1;
@@ -43,7 +78,7 @@ st.markdown("""
         padding: 1.5rem;
         background-color: white;
         box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        margin-top: 1rem;
+        margin: 1rem 0;
     }
     
     .graphviz-title {
@@ -61,6 +96,16 @@ st.markdown("""
         border-radius: 8px;
         padding: 1rem;
         height: 100%;
+        margin: 0.5rem 0;
+    }
+    
+    [data-testid="stMetricValue"], [data-testid="stMetricLabel"] {
+        color: #2C3E50 !important;
+    }
+    
+    .stCaption {
+        color: #7F8C8D !important;
+        font-size: 0.85rem;
     }
     
     .footer {
@@ -70,6 +115,52 @@ st.markdown("""
         margin-top: 3rem;
         padding: 1.5rem 0;
         border-top: 1px solid #ECF0F1;
+    }
+    
+    blockquote {
+        border-left: 3px solid #BDC3C7;
+        padding-left: 1rem;
+        margin-left: 0;
+        color: #5D6D7E;
+        font-style: italic;
+        background-color: rgba(236, 240, 241, 0.3);
+        padding: 0.5rem 1rem;
+        border-radius: 0 4px 4px 0;
+        margin: 1rem 0;
+    }
+    
+    .streamlit-expanderHeader {
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        color: #2C3E50 !important;
+        border: 1px solid #ECF0F1 !important;
+        border-radius: 6px;
+        font-weight: 600;
+    }
+    
+    .streamlit-expanderContent {
+        background-color: rgba(255, 255, 255, 0.8) !important;
+        border: 1px solid #ECF0F1 !important;
+        border-top: none;
+        border-radius: 0 0 6px 6px;
+    }
+    
+    table {
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        border: 1px solid #ECF0F1 !important;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+    
+    th {
+        background-color: #F8F9FA !important;
+        color: #2C3E50 !important;
+        font-weight: 700;
+        border-bottom: 2px solid #ECF0F1 !important;
+    }
+    
+    td {
+        color: #2C3E50 !important;
+        border-bottom: 1px solid #ECF0F1 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -133,7 +224,6 @@ Agar musik tidak kaku, kami menggunakan **Markov Chain** untuk menentukan *langk
 Bayangkan AI melempar dadu untuk setiap ketukan:
 """)
 
-# FIXED: METRIC CARDS YANG HILANG
 c1, c2, c3 = st.columns(3)
 with c1:
     st.metric(label="Stepwise (Langkah Pendek)", value="60%", delta="Dominan")
