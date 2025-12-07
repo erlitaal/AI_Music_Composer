@@ -8,90 +8,177 @@ st.markdown("""
         display: none !important;
     }
     
-    /* BACKGROUND CREAM DAN TEKS DARK */
+    /* BACKGROUND CREAM MUDA DENGAN SENTUHAN ABU-ABU */
     .stApp {
-        background-color: #F5F5DC !important;  /* Cream color */
+        background-color: #FAF9F6 !important;  /* Cream muda dengan sedikit abu-abu */
     }
     
-    /* WARNA TEKS UTAMA */
+    /* WARNA TEKS UTAMA - HITAM SOFT */
     h1, h2, h3, h4, h5, h6, p, div, span, label, .stMarkdown, .stTitle, .stHeader {
-        color: #1A1A1A !important;  /* Dark gray almost black */
+        color: #2C3E50 !important;  /* Dark blue-gray, lebih soft dari hitam penuh */
     }
     
-    /* WARNA UNTUK CONTAINER DAN CARD */
-    .stTabs [data-baseweb="tab-list"] {
-        background-color: rgba(245, 245, 220, 0.9) !important;
+    /* TEKS BOLD/TEBAL */
+    strong, b {
+        color: #1A1A1A !important;  /* Sedikit lebih gelap untuk bold text */
     }
     
-    /* WARNA DIVIDER */
+    /* WARNA DIVIDER - ABU-ABU MUDA */
     hr {
-        border-color: #8B7355 !important;  /* Brownish color for dividers */
-        opacity: 0.3;
+        border-color: #BDC3C7 !important;  /* Abu-abu muda */
+        opacity: 0.5;
+        margin: 2rem 0;
     }
     
     /* WARNA METRIC CARD */
     [data-testid="stMetricValue"], [data-testid="stMetricLabel"] {
-        color: #1A1A1A !important;
+        color: #2C3E50 !important;
     }
     
-    /* WARNA INFO, SUCCESS, WARNING BOX */
+    [data-testid="stMetricDelta"] svg {
+        color: #2C3E50 !important;
+    }
+    
+    /* WARNA ALERT BOXES */
     .stAlert {
-        background-color: rgba(255, 255, 255, 0.8) !important;
+        background-color: rgba(255, 255, 255, 0.85) !important;
+        border: 1px solid #ECF0F1 !important;
         border-left: 4px solid;
+        border-radius: 8px;
+        padding: 1rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
     
     .stAlert [data-testid="stMarkdownContainer"] {
-        color: #1A1A1A !important;
+        color: #2C3E50 !important;
     }
     
-    /* INFO BOX - Blue */
-    div[data-testid="stAlert"] div:has(> div[data-testid="stMarkdownContainer"]:contains("Peran:")):first-child {
-        border-left-color: #4A90E2 !important;
+    /* INFO BOX - Blue soft */
+    div[data-testid="stAlert"] div:has(> div[data-testid="stMarkdownContainer"]:contains("Polisi")) {
+        border-left-color: #3498DB !important;
     }
     
-    /* WARNING BOX - Orange */
-    div[data-testid="stAlert"] div:has(> div[data-testid="stMarkdownContainer"]:contains("Peng")):first-child {
-        border-left-color: #F39C12 !important;
+    /* WARNING BOX - Orange soft */
+    div[data-testid="stAlert"] div:has(> div[data-testid="stMarkdownContainer"]:contains("Pengarang")) {
+        border-left-color: #E67E22 !important;
     }
     
-    /* SUCCESS BOX - Green */
-    div[data-testid="stAlert"] div:has(> div[data-testid="stMarkdownContainer"]:contains("Penentu")):first-child {
-        border-left-color: #27AE60 !important;
+    /* SUCCESS BOX - Green soft */
+    div[data-testid="stAlert"] div:has(> div[data-testid="stMarkdownContainer"]:contains("Penentu")) {
+        border-left-color: #2ECC71 !important;
     }
     
     /* WARNA EXPANDER */
     .streamlit-expanderHeader {
-        background-color: rgba(255, 255, 255, 0.7) !important;
-        color: #1A1A1A !important;
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        color: #2C3E50 !important;
+        border: 1px solid #ECF0F1 !important;
+        border-radius: 6px;
+        font-weight: 500;
     }
     
     .streamlit-expanderContent {
-        background-color: rgba(255, 255, 255, 0.5) !important;
+        background-color: rgba(255, 255, 255, 0.8) !important;
+        border: 1px solid #ECF0F1 !important;
+        border-top: none;
+        border-radius: 0 0 6px 6px;
     }
     
     /* WARNA TABLE */
-    .stDataFrame, table {
-        background-color: rgba(255, 255, 255, 0.8) !important;
+    table {
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        border: 1px solid #ECF0F1 !important;
+        border-radius: 6px;
+        overflow: hidden;
     }
     
-    th, td {
-        color: #1A1A1A !important;
-        border-color: #8B7355 !important;
+    th {
+        background-color: #F8F9FA !important;
+        color: #2C3E50 !important;
+        font-weight: 600;
+        border-bottom: 2px solid #ECF0F1 !important;
     }
     
-    /* CAPTION TEXT */
+    td {
+        color: #2C3E50 !important;
+        border-bottom: 1px solid #ECF0F1 !important;
+    }
+    
+    /* CAPTION TEXT - Abu-abu medium */
     .stCaption {
-        color: #666666 !important;
+        color: #7F8C8D !important;
+        font-size: 0.85rem;
     }
     
-    /* GRAPHVIZ ANIMATION */
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
+    /* QUOTE/BLOCKQUOTE STYLE */
+    blockquote {
+        border-left: 3px solid #BDC3C7;
+        padding-left: 1rem;
+        margin-left: 0;
+        color: #5D6D7E;
+        font-style: italic;
+        background-color: rgba(236, 240, 241, 0.3);
+        padding: 0.5rem 1rem;
+        border-radius: 0 4px 4px 0;
     }
     
+    /* TITLE SPACING */
+    .stTitle h1 {
+        margin-bottom: 1.5rem !important;
+    }
+    
+    /* SUBTITLE */
+    .stMarkdown h2 {
+        margin-top: 2rem !important;
+        margin-bottom: 1rem !important;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #ECF0F1;
+    }
+    
+    /* GRAPHVIZ STYLING */
     .stGraphviz {
-        animation: fadeIn 0.8s ease-out;
+        border: 1px solid #ECF0F1;
+        border-radius: 8px;
+        padding: 1rem;
+        background-color: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    /* METRIC CARDS STYLING */
+    [data-testid="stMetric"] {
+        background-color: rgba(255, 255, 255, 0.9);
+        border: 1px solid #ECF0F1;
+        border-radius: 8px;
+        padding: 1rem;
+        height: 100%;
+    }
+    
+    /* FOOTER STYLING */
+    .footer {
+        text-align: center;
+        color: #95A5A6 !important;
+        font-size: 0.8rem;
+        margin-top: 3rem;
+        padding: 1.5rem 0;
+        border-top: 1px solid #ECF0F1;
+    }
+    
+    /* SCROLLBAR STYLING */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: #FAF9F6;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: #BDC3C7;
+        border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: #95A5A6;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -184,7 +271,7 @@ with st.expander("🔍 Lihat Detail Pola (Pattern Library)"):
     """)
 
 st.markdown("""
-<div style="text-align: center; color: #666; font-size: 0.8rem; margin-top: 50px; padding: 20px; border-top: 1px solid #8B7355;">
+<div class="footer">
     © 2025 Kelompok 5 - Teknik Informatika. Dibuat dengan Python & Streamlit.
 </div>
 """, unsafe_allow_html=True)
