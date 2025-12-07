@@ -22,11 +22,7 @@ st.markdown("""
     h2 { font-size: 1.8rem !important; margin-top: 2rem !important; margin-bottom: 1rem !important; }
     
     /* Warna teks utama */
-    .main .block-container {
-        color: #2C3E50 !important;
-    }
-    
-    p, li, td, th, span, div:not([class*="stAlert"]) {
+    .main .block-container, p, li, span, div {
         color: #2C3E50 !important;
     }
     
@@ -47,26 +43,44 @@ st.markdown("""
         margin: 1rem 0;
     }
     
-    /* Alert boxes styling sederhana - tanpa mengubah struktur Streamlit */
+    /* CARA SEDERHANA: Override warna alert boxes dengan !important */
+    /* Hapus semua warna background default Streamlit */
     div[data-testid="stAlert"] {
+        background-color: rgba(255, 255, 255, 0.95) !important;
         border: 1px solid #D1D5D8 !important;
-        border-left: 4px solid #95A5A6 !important;
-        background-color: rgba(255, 255, 255, 0.9) !important;
+        border-radius: 8px !important;
     }
     
-    /* Info alert */
-    div.stAlert:has(> div > div > svg[data-testid="InfoIcon"]) {
+    /* Hapus warna border kiri default */
+    div[data-testid="stAlert"] > div:first-child {
+        background-color: transparent !important;
+        border: none !important;
+    }
+    
+    /* Tambahkan border kiri abu-abu custom */
+    div[data-testid="stAlert"] {
+        border-left: 4px solid #95A5A6 !important;
+        padding: 1rem !important;
+    }
+    
+    /* Untuk info box - border abu-abu medium */
+    div[data-testid="stAlert"]:has(> div > div > svg[fill="#00b4d8"]) {
         border-left-color: #7F8C8D !important;
     }
     
-    /* Warning alert */
-    div.stAlert:has(> div > div > svg[data-testid="WarningIcon"]) {
+    /* Untuk warning box - border abu-abu muda */
+    div[data-testid="stAlert"]:has(> div > div > svg[fill="#ffaa00"]) {
         border-left-color: #95A5A6 !important;
     }
     
-    /* Success alert */
-    div.stAlert:has(> div > div > svg[data-testid="SuccessIcon"]) {
+    /* Untuk success box - border abu-abu gelap */
+    div[data-testid="stAlert"]:has(> div > div > svg[fill="#00d084"]) {
         border-left-color: #5D6D7E !important;
+    }
+    
+    /* Sembunyikan icon SVG default */
+    div[data-testid="stAlert"] > div:first-child > div:first-child {
+        display: none !important;
     }
     
     /* Metric cards */
@@ -85,6 +99,18 @@ st.markdown("""
         margin-top: 3rem;
         padding: 1.5rem 0;
         border-top: 1px solid #ECF0F1;
+    }
+    
+    /* Expander styling */
+    .streamlit-expanderHeader {
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        color: #2C3E50 !important;
+        border: 1px solid #D1D5D8 !important;
+    }
+    
+    .streamlit-expanderContent {
+        background-color: white !important;
+        color: #2C3E50 !important;
     }
 </style>
 """, unsafe_allow_html=True)
