@@ -5,99 +5,39 @@ st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Droid+Serif:wght@700&display=swap');
     
+    /* Sembunyikan ikon header */
     [data-testid="stHeaderActionElements"] { display: none !important; }
     
-    .stApp { 
-        background-color: #FAF9F6 !important;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    /* Background cream */
+    .stApp { background-color: #FAF9F6 !important; }
     
-    h1 { 
+    /* Font judul */
+    h1, h2, h3, h4, h5, h6 {
         font-family: 'Droid Serif', serif !important;
         font-weight: 700 !important;
         color: #2C3E50 !important;
-        font-size: 2.5rem !important;
-        margin-bottom: 1rem !important;
     }
     
-    h2 { 
-        font-family: 'Droid Serif', serif !important;
-        font-weight: 700 !important;
+    h1 { font-size: 2.5rem !important; margin-bottom: 1rem !important; }
+    h2 { font-size: 1.8rem !important; margin-top: 2rem !important; margin-bottom: 1rem !important; }
+    
+    /* Warna teks utama */
+    .main .block-container {
         color: #2C3E50 !important;
-        font-size: 1.8rem !important;
-        margin-top: 2rem !important;
-        margin-bottom: 1rem !important;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid #ECF0F1;
     }
     
-    /* WARNA TEKS UTAMA */
-    .stMarkdown, .stMarkdown p, .stMarkdown div, .stMarkdown span,
-    p, div, span, label {
+    p, li, td, th, span, div:not([class*="stAlert"]) {
         color: #2C3E50 !important;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
-    strong, b {
-        color: #1A1A1A !important;
-    }
-    
-    /* ALERT BOXES - PERBAIKAN SELECTOR */
-    /* Hapus warna default Streamlit */
-    div[data-testid="stAlert"] > div:first-child {
-        background-color: transparent !important;
-    }
-    
-    /* Style untuk semua alert boxes */
-    div[data-testid="stAlert"] {
-        background-color: rgba(255, 255, 255, 0.9) !important;
-        border: 1px solid #D1D5D8 !important;
-        border-left: 4px solid #95A5A6 !important; /* Default abu-abu */
-        border-radius: 8px;
-        padding: 1rem !important;
-        margin: 1rem 0 !important;
-    }
-    
-    /* Hapus icon default */
-    div[data-testid="stAlert"] > div:first-child > div:first-child {
-        display: none !important;
-    }
-    
-    /* WARNA BORDER KIRI BERDASARKAN JENIS ALERT */
-    /* Info (biru asli) -> Abu-abu medium */
-    div[data-testid="stAlert"]:has(svg[aria-label="Info"]) {
-        border-left-color: #7F8C8D !important;
-    }
-    
-    /* Warning (kuning asli) -> Abu-abu muda */
-    div[data-testid="stAlert"]:has(svg[aria-label="Warning"]) {
-        border-left-color: #95A5A6 !important;
-    }
-    
-    /* Success (hijau asli) -> Abu-abu gelap */
-    div[data-testid="stAlert"]:has(svg[aria-label="Success"]) {
-        border-left-color: #5D6D7E !important;
-    }
-    
-    /* Text dalam alert */
-    .stAlert [data-testid="stMarkdownContainer"] {
-        color: #2C3E50 !important;
-        margin-left: 0 !important;
-        padding-left: 0 !important;
-    }
-    
-    /* Judul dalam alert boxes */
-    .stAlert strong {
-        color: #2C3E50 !important;
-        font-size: 1.1rem;
-    }
-    
-    hr { 
-        border-color: #BDC3C7 !important; 
-        margin: 2rem 0; 
+    /* Divider */
+    hr {
+        border-color: #BDC3C7 !important;
+        margin: 2rem 0 !important;
         opacity: 0.5;
     }
     
+    /* Container untuk graphviz */
     .graphviz-container {
         border: 1px solid #ECF0F1;
         border-radius: 12px;
@@ -107,33 +47,37 @@ st.markdown("""
         margin: 1rem 0;
     }
     
-    .graphviz-title {
-        font-family: 'Droid Serif', serif !important;
-        font-weight: 700 !important;
-        color: #2C3E50 !important;
-        font-size: 1.2rem !important;
-        margin-bottom: 1rem !important;
-        text-align: center;
+    /* Alert boxes styling sederhana - tanpa mengubah struktur Streamlit */
+    div[data-testid="stAlert"] {
+        border: 1px solid #D1D5D8 !important;
+        border-left: 4px solid #95A5A6 !important;
+        background-color: rgba(255, 255, 255, 0.9) !important;
     }
     
+    /* Info alert */
+    div.stAlert:has(> div > div > svg[data-testid="InfoIcon"]) {
+        border-left-color: #7F8C8D !important;
+    }
+    
+    /* Warning alert */
+    div.stAlert:has(> div > div > svg[data-testid="WarningIcon"]) {
+        border-left-color: #95A5A6 !important;
+    }
+    
+    /* Success alert */
+    div.stAlert:has(> div > div > svg[data-testid="SuccessIcon"]) {
+        border-left-color: #5D6D7E !important;
+    }
+    
+    /* Metric cards */
     [data-testid="stMetric"] {
         background-color: rgba(255, 255, 255, 0.9);
         border: 1px solid #ECF0F1;
         border-radius: 8px;
         padding: 1rem;
-        height: 100%;
-        margin: 0.5rem 0;
     }
     
-    [data-testid="stMetricValue"], [data-testid="stMetricLabel"] {
-        color: #2C3E50 !important;
-    }
-    
-    .stCaption {
-        color: #7F8C8D !important;
-        font-size: 0.85rem;
-    }
-    
+    /* Footer */
     .footer {
         text-align: center;
         color: #95A5A6 !important;
@@ -141,79 +85,6 @@ st.markdown("""
         margin-top: 3rem;
         padding: 1.5rem 0;
         border-top: 1px solid #ECF0F1;
-    }
-    
-    blockquote {
-        border-left: 3px solid #BDC3C7;
-        padding-left: 1rem;
-        margin-left: 0;
-        color: #5D6D7E;
-        font-style: italic;
-        background-color: rgba(236, 240, 241, 0.3);
-        padding: 0.5rem 1rem;
-        border-radius: 0 4px 4px 0;
-        margin: 1rem 0;
-    }
-    
-    /* EXPANDER STYLING */
-    .streamlit-expanderHeader {
-        background-color: rgba(255, 255, 255, 0.95) !important;
-        color: #2C3E50 !important;
-        border: 1px solid #D1D5D8 !important;
-        border-radius: 6px;
-        font-weight: 600;
-        margin: 1rem 0;
-    }
-    
-    .streamlit-expanderHeader:hover {
-        background-color: white !important;
-    }
-    
-    .streamlit-expanderContent {
-        background-color: white !important;
-        border: 1px solid #D1D5D8 !important;
-        border-top: none !important;
-        border-radius: 0 0 6px 6px;
-        padding: 1rem !important;
-    }
-    
-    div[data-testid="stExpander"] .stMarkdown,
-    div[data-testid="stExpander"] p,
-    div[data-testid="stExpander"] div,
-    div[data-testid="stExpander"] span,
-    div[data-testid="stExpander"] strong {
-        color: #2C3E50 !important;
-    }
-    
-    div[data-testid="stExpander"] table {
-        background-color: white !important;
-        border: 1px solid #ECF0F1 !important;
-        border-radius: 6px;
-        overflow: hidden;
-        margin: 0.5rem 0;
-        width: 100%;
-    }
-    
-    div[data-testid="stExpander"] th {
-        background-color: #F8F9FA !important;
-        color: #2C3E50 !important;
-        font-weight: 700;
-        border-bottom: 2px solid #ECF0F1 !important;
-        padding: 12px 16px !important;
-    }
-    
-    div[data-testid="stExpander"] td {
-        color: #2C3E50 !important;
-        border-bottom: 1px solid #ECF0F1 !important;
-        padding: 10px 16px !important;
-    }
-    
-    div[data-testid="stExpander"] tr:hover {
-        background-color: rgba(245, 245, 220, 0.3) !important;
-    }
-    
-    div[data-testid="stExpander"] strong {
-        color: #1A1A1A !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -248,15 +119,15 @@ with col1:
 
 with col2:
     st.markdown('<div class="graphviz-container">', unsafe_allow_html=True)
-    st.markdown('<div class="graphviz-title">Visualisasi FSA Sederhana</div>', unsafe_allow_html=True)
+    st.markdown('<div style="text-align: center; font-weight: bold; color: #2C3E50; margin-bottom: 1rem;">Visualisasi FSA Sederhana</div>', unsafe_allow_html=True)
     
     graph = graphviz.Digraph()
     graph.attr(rankdir='LR', size='8,4')
     
-    graph.node('C', 'Start (C)', shape='doublecircle', style='filled', fillcolor='#3498DB')
-    graph.node('D', 'Nada D', shape='circle', style='filled', fillcolor='#2ECC71')
-    graph.node('E', 'Nada E', shape='circle', style='filled', fillcolor='#E74C3C')
-    graph.node('F', 'Nada F', shape='circle', style='filled', fillcolor='#F39C12')
+    graph.node('C', 'Start (C)', shape='doublecircle')
+    graph.node('D', 'Nada D', shape='circle')
+    graph.node('E', 'Nada E', shape='circle')
+    graph.node('F', 'Nada F', shape='circle')
     
     graph.edge('C', 'D', label=' 1')
     graph.edge('D', 'E', label=' 1')
