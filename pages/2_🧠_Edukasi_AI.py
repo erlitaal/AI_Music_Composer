@@ -1,391 +1,569 @@
 import streamlit as st
 import graphviz
 
-# Custom CSS dengan warna musik yang menarik
 st.markdown("""
 <style>
-    /* HILANGKAN IKON RANTAI DI HEADER */
     [data-testid="stHeaderActionElements"] {
         display: none !important;
     }
     
-    /* Global Styles */
     .stApp {
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #312e81 100%);
-        font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
-        color: #f1f5f9;
+        background: linear-gradient(135deg, #f5f1e8 0%, #f0ebe0 100%);
+        font-family: 'Georgia', 'Times New Roman', serif;
+        color: #3c3c3c;
     }
     
-    /* Title Styling */
+    /* Elegant border decoration */
+    .page-border {
+        position: fixed;
+        pointer-events: none;
+        z-index: 9999;
+    }
+    
+    .border-top {
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #8B7355, #D4AF37, #8B7355);
+    }
+    
+    .border-left {
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(180deg, #8B7355, #D4AF37, #8B7355);
+    }
+    
+    .border-right {
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(180deg, #8B7355, #D4AF37, #8B7355);
+    }
+    
+    .border-bottom {
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #8B7355, #D4AF37, #8B7355);
+    }
+    
+    /* Music note decorations */
+    .music-note {
+        position: absolute;
+        font-size: 2rem;
+        color: rgba(139, 115, 85, 0.2);
+        z-index: -1;
+        opacity: 0.4;
+    }
+    
+    .note-1 { top: 10%; left: 5%; transform: rotate(-15deg); }
+    .note-2 { top: 20%; right: 8%; transform: rotate(10deg); }
+    .note-3 { bottom: 25%; left: 10%; transform: rotate(-20deg); }
+    .note-4 { bottom: 15%; right: 12%; transform: rotate(15deg); }
+    .note-5 { top: 45%; left: 15%; transform: rotate(5deg); }
+    
+    /* Main container */
+    .classic-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+        position: relative;
+        background: rgba(255, 253, 248, 0.8);
+        border-radius: 2px;
+    }
+    
+    /* Header with decorative line */
+    .elegant-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        position: relative;
+        padding-bottom: 1.5rem;
+    }
+    
+    .elegant-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 25%;
+        right: 25%;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, #8B7355, transparent);
+    }
+    
     .main-title {
-        text-align: center;
-        font-size: 3.5rem;
-        font-weight: 800;
-        background: linear-gradient(90deg, #8b5cf6, #3b82f6, #06b6d4);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0.5rem;
-        padding-top: 1rem;
-    }
-    
-    .main-subtitle {
-        text-align: center;
-        color: #cbd5e1;
-        font-size: 1.2rem;
-        max-width: 800px;
-        margin: 0 auto 3rem auto;
-        line-height: 1.6;
-    }
-    
-    /* Section Headers */
-    .section-header {
-        font-size: 2.2rem;
+        font-size: 3.2rem;
         font-weight: 700;
-        margin: 2.5rem 0 1.5rem 0;
+        color: #2c2c2c;
+        margin-bottom: 0.5rem;
+        font-family: 'Garamond', serif;
+        letter-spacing: 1px;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    .title-accent {
+        color: #8B7355;
+        font-style: italic;
+    }
+    
+    .subtitle {
+        font-size: 1.1rem;
+        color: #666;
+        line-height: 1.6;
+        max-width: 800px;
+        margin: 0 auto;
+        font-style: italic;
+    }
+    
+    /* Section styling */
+    .section-container {
+        margin: 3rem 0;
+        padding: 2.5rem;
+        background: white;
+        border-radius: 4px;
+        border: 1px solid #e0d8c9;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .section-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #D4AF37, #8B7355);
+    }
+    
+    /* Section header with music icon */
+    .section-header {
         display: flex;
         align-items: center;
         gap: 15px;
-        color: #f8fafc;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e0d8c9;
     }
     
-    .section-icon {
-        font-size: 2.5rem;
+    .section-number {
+        width: 40px;
+        height: 40px;
+        background: #8B7355;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+        font-family: 'Georgia', serif;
     }
     
-    /* Card Designs */
-    .info-card {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        padding: 2rem;
-        border: 1px solid rgba(139, 92, 246, 0.2);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        margin: 1.5rem 0;
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #3c3c3c;
+        margin: 0;
+        font-family: 'Garamond', serif;
     }
     
-    /* Role Badges */
+    /* Role badge */
     .role-badge {
         display: inline-block;
         padding: 0.5rem 1.2rem;
-        border-radius: 50px;
-        font-weight: 600;
+        background: #f8f4e9;
+        border: 2px solid #D4AF37;
+        border-radius: 20px;
+        font-style: italic;
+        color: #8B7355;
+        margin: 0.5rem 0 1.5rem 0;
         font-size: 0.95rem;
-        margin-bottom: 1rem;
     }
     
-    .fsa-badge {
-        background: linear-gradient(90deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.2));
-        border: 1px solid rgba(139, 92, 246, 0.5);
-        color: #a78bfa;
+    /* Content box */
+    .content-box {
+        background: #f9f7f1;
+        padding: 2rem;
+        border-radius: 4px;
+        border-left: 4px solid #8B7355;
+        margin: 1.5rem 0;
     }
     
-    .markov-badge {
-        background: linear-gradient(90deg, rgba(245, 158, 11, 0.2), rgba(251, 191, 36, 0.2));
-        border: 1px solid rgba(245, 158, 11, 0.5);
-        color: #fbbf24;
-    }
-    
-    .pattern-badge {
-        background: linear-gradient(90deg, rgba(16, 185, 129, 0.2), rgba(52, 211, 153, 0.2));
-        border: 1px solid rgba(16, 185, 129, 0.5);
-        color: #34d399;
-    }
-    
-    /* Metric Cards */
-    .metric-card {
-        background: rgba(30, 41, 59, 0.7);
-        border-radius: 16px;
+    /* Example box with musical border */
+    .example-box {
+        background: linear-gradient(to right, #fefcf6, #f9f7f1);
         padding: 1.5rem;
+        border-radius: 4px;
+        border: 1px solid #e0d8c9;
+        margin: 2rem 0;
+        position: relative;
+    }
+    
+    .example-box::before {
+        content: '🎵';
+        position: absolute;
+        top: -15px;
+        left: 20px;
+        background: white;
+        padding: 0 10px;
+        font-size: 1.2rem;
+    }
+    
+    /* Metric cards with vintage style */
+    .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+    
+    .metric-card {
+        background: white;
+        padding: 1.8rem;
+        border-radius: 4px;
+        border: 1px solid #e0d8c9;
         text-align: center;
-        border: 1px solid rgba(139, 92, 246, 0.1);
-        transition: transform 0.3s ease;
-        height: 100%;
+        position: relative;
+        transition: all 0.3s ease;
     }
     
     .metric-card:hover {
         transform: translateY(-5px);
-        border-color: rgba(139, 92, 246, 0.3);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
     }
     
-    /* Example Box */
-    .example-box {
-        background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.1));
-        border-left: 4px solid #8b5cf6;
-        padding: 1.5rem;
-        border-radius: 12px;
-        margin: 1.5rem 0;
-        font-style: italic;
+    .metric-value {
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: #8B7355;
+        margin-bottom: 0.5rem;
+        font-family: 'Georgia', serif;
     }
     
-    /* List Styling */
-    .styled-list {
-        color: #cbd5e1;
-        line-height: 1.8;
-        padding-left: 1.2rem;
+    /* Graphviz container */
+    .graph-container {
+        background: white;
+        padding: 2rem;
+        border-radius: 4px;
+        border: 1px solid #e0d8c9;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
     
-    .styled-list li {
-        margin-bottom: 0.8rem;
-    }
-    
-    /* Table Styling */
-    .pattern-table {
+    /* Table styling */
+    .vintage-table {
         width: 100%;
-        background: rgba(30, 41, 59, 0.8);
-        border-radius: 12px;
-        overflow: hidden;
-        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-collapse: collapse;
+        background: white;
+        border: 1px solid #e0d8c9;
+        font-family: 'Georgia', serif;
     }
     
-    .pattern-table th {
-        background: rgba(139, 92, 246, 0.2);
-        color: #e2e8f0;
+    .vintage-table th {
+        background: #f8f4e9;
         padding: 1rem;
-        font-weight: 600;
         text-align: left;
+        font-weight: 600;
+        color: #8B7355;
+        border-bottom: 2px solid #e0d8c9;
     }
     
-    .pattern-table td {
+    .vintage-table td {
         padding: 1rem;
-        border-bottom: 1px solid rgba(139, 92, 246, 0.1);
-        color: #cbd5e1;
+        border-bottom: 1px solid #f0ebe0;
+        color: #666;
+    }
+    
+    /* Piano key decoration */
+    .piano-decoration {
+        height: 30px;
+        background: linear-gradient(90deg, 
+            #000 0%, #000 2%, 
+            #fff 2%, #fff 4%, 
+            #000 4%, #000 6%,
+            #fff 6%, #fff 8%,
+            #000 8%, #000 10%,
+            #fff 10%, #fff 12%,
+            #000 12%, #000 14%,
+            #fff 14%, #fff 16%,
+            #000 16%, #000 18%,
+            #fff 18%, #fff 20%,
+            #000 20%, #000 22%,
+            #fff 22%, #fff 24%,
+            #000 24%, #000 26%,
+            #fff 26%, #fff 28%,
+            #000 28%, #000 30%);
+        margin: 2rem 0;
+        border-radius: 2px;
     }
     
     /* Footer */
-    .music-footer {
+    .elegant-footer {
         text-align: center;
         margin-top: 4rem;
         padding-top: 2rem;
-        border-top: 1px solid rgba(139, 92, 246, 0.2);
-        color: #94a3b8;
+        border-top: 1px solid #e0d8c9;
+        color: #8B7355;
         font-size: 0.9rem;
+        font-style: italic;
     }
     
-    /* Custom Divider */
-    .custom-divider {
-        height: 2px;
-        background: linear-gradient(90deg, transparent, #8b5cf6, #3b82f6, transparent);
-        margin: 2.5rem 0;
-        border: none;
-    }
-    
-    /* Graphviz Container */
-    .graph-container {
-        background: rgba(30, 41, 59, 0.7);
-        border-radius: 16px;
-        padding: 1.5rem;
-        border: 1px solid rgba(139, 92, 246, 0.2);
+    /* Decorative musical staff */
+    .music-staff {
+        height: 60px;
+        background: 
+            repeating-linear-gradient(
+                to bottom,
+                transparent,
+                transparent 9px,
+                #8B7355 9px,
+                #8B7355 10px
+            );
+        background-size: 100% 50px;
+        margin: 2rem 0;
+        position: relative;
+        opacity: 0.3;
     }
 </style>
+
+<!-- Border decorations -->
+<div class="page-border border-top"></div>
+<div class="page-border border-left"></div>
+<div class="page-border border-right"></div>
+<div class="page-border border-bottom"></div>
+
+<!-- Music note decorations -->
+<div class="music-note note-1">♪</div>
+<div class="music-note note-2">♫</div>
+<div class="music-note note-3">♬</div>
+<div class="music-note note-4">🎵</div>
+<div class="music-note note-5">🎶</div>
 """, unsafe_allow_html=True)
 
 st.set_page_config(page_title="Cara Kerja AI", page_icon="🧠", layout="wide")
 
-# Header Section
-st.markdown('<h1 class="main-title">🧠 Di Balik Layar: Bedah Logika AI</h1>', unsafe_allow_html=True)
+# Main container
+st.markdown('<div class="classic-container">', unsafe_allow_html=True)
+
+# Header
 st.markdown("""
-<p class="main-subtitle">
-Aplikasi ini bukan sekadar pemutar musik acak. Kami menggabungkan <strong style="color:#8b5cf6">Teori Musik</strong> 
-dengan <strong style="color:#3b82f6">Ilmu Komputer (TBO)</strong> untuk menciptakan komposisi yang harmonis. 
-Berikut adalah 3 pilar utamanya:
-</p>
+<div class="elegant-header">
+    <h1 class="main-title">Di Balik Layar: <span class="title-accent">Bedah Logika AI</span></h1>
+    <p class="subtitle">
+    Aplikasi ini bukan sekadar pemutar musik acak. Kami menggabungkan <strong style="color:#8B7355">Teori Musik</strong> 
+    dengan <strong style="color:#8B7355">Ilmu Komputer (TBO)</strong> untuk menciptakan komposisi yang harmonis.
+    </p>
+</div>
 """, unsafe_allow_html=True)
 
-# Custom Divider
-st.markdown('<hr class="custom-divider">', unsafe_allow_html=True)
+# Piano decoration
+st.markdown('<div class="piano-decoration"></div>', unsafe_allow_html=True)
 
 # --- BAGIAN 1: FSA ---
 col1, col2 = st.columns([2, 1], gap="large")
 
 with col1:
-    st.markdown('<h2 class="section-header"><span class="section-icon">⚡</span>1. Finite State Automata (FSA)</h2>', unsafe_allow_html=True)
+    st.markdown('<div class="section-container">', unsafe_allow_html=True)
     
-    st.markdown('<div class="role-badge fsa-badge">👮‍♂️ Peran: Polisi Lalu Lintas Nada</div>', unsafe_allow_html=True)
-    
-    st.markdown('<div class="info-card">', unsafe_allow_html=True)
     st.markdown("""
-    <p style="color:#e2e8f0; font-size:1.05rem; line-height:1.7;">
-    Dalam mata kuliah TBO, FSA didefinisikan sebagai mesin yang memiliki <strong style="color:#8b5cf6">State</strong> dan <strong style="color:#8b5cf6">Transisi</strong>. 
-    Di aplikasi ini:
-    </p>
-    
-    <ul class="styled-list">
-        <li><strong style="color:#a78bfa">State ($Q$):</strong> Adalah nada-nada dalam piano (C, D, E, F, G, A, B).</li>
-        <li><strong style="color:#a78bfa">Input ($\Sigma$):</strong> Adalah aturan Mood (Mayor/Minor).</li>
-        <li><strong style="color:#a78bfa">Fungsi Transisi ($\delta$):</strong> Logika yang <em>melarang</em> AI memilih nada fals.</li>
-    </ul>
+    <div class="section-header">
+        <div class="section-number">I</div>
+        <h2 class="section-title">Finite State Automata</h2>
+    </div>
     """, unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
     
-    st.markdown('<div class="example-box">', unsafe_allow_html=True)
+    st.markdown('<div class="role-badge">👮‍♂️ Polisi Lalu Lintas Nada</div>', unsafe_allow_html=True)
+    
     st.markdown("""
-    <strong style="color:#f1f5f9">🎵 Contoh Implementasi:</strong><br>
-    Jika Mood = <strong style="color:#fbbf24">Sedih (C Minor)</strong>, maka State <strong style="color:#fbbf24">E (Mi Natural)</strong> 
-    adalah <em>Dead State</em> (Ditolak). AI dipaksa transisi ke <strong style="color:#34d399">Eb (Mi Mol)</strong>.
+    <div class="content-box">
+        <p style="color:#3c3c3c; line-height:1.8; font-size:1.05rem;">
+        Dalam mata kuliah TBO, FSA didefinisikan sebagai mesin yang memiliki <strong style="color:#8B7355">State</strong> dan <strong style="color:#8B7355">Transisi</strong>. 
+        Di aplikasi ini:
+        </p>
+        
+        <ul style="color:#3c3c3c; line-height:1.8; padding-left:1.2rem; margin:1.5rem 0;">
+            <li><strong style="color:#8B7355">State ($Q$):</strong> Adalah nada-nada dalam piano (C, D, E, F, G, A, B).</li>
+            <li><strong style="color:#8B7355">Input ($\Sigma$):</strong> Adalah aturan Mood (Mayor/Minor).</li>
+            <li><strong style="color:#8B7355">Fungsi Transisi ($\delta$):</strong> Logika yang <em>melarang</em> AI memilih nada fals.</li>
+        </ul>
+    </div>
     """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div class="example-box">
+        <strong style="color:#8B7355">🎹 Contoh Implementasi:</strong><br><br>
+        Jika Mood = <strong>Sedih (C Minor)</strong>, maka State <strong>E (Mi Natural)</strong> 
+        adalah <em>Dead State</em> (Ditolak). AI dipaksa transisi ke <strong>Eb (Mi Mol)</strong>.
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown('</div>', unsafe_allow_html=True)
 
 with col2:
     st.markdown('<div class="graph-container">', unsafe_allow_html=True)
-    st.markdown('<p style="text-align:center; color:#94a3b8; margin-bottom:1rem; font-weight:600;">🎼 Visualisasi FSA Sederhana</p>', unsafe_allow_html=True)
+    st.markdown('<p style="text-align:center; color:#8B7355; font-style:italic; margin-bottom:1.5rem;">Diagram Transisi Nada</p>', unsafe_allow_html=True)
     
-    # Membuat Diagram FSA menggunakan Graphviz
+    # Graphviz diagram dengan warna vintage
     graph = graphviz.Digraph()
-    graph.attr(rankdir='LR', size='4', bgcolor='transparent', fontcolor='white')
+    graph.attr(rankdir='LR', size='4', bgcolor='transparent')
+    graph.attr('node', style='filled', fillcolor='#f9f7f1', fontname='Georgia', 
+               color='#8B7355', fontsize='12', fontcolor='#3c3c3c')
+    graph.attr('edge', color='#8B7355', fontcolor='#666')
     
-    # Node styling
-    graph.attr('node', style='filled', fillcolor='#1e293b', fontcolor='white', 
-               color='#8b5cf6', fontname='Poppins')
+    graph.node('C', 'Start (C)', shape='doublecircle', fillcolor='#8B7355', fontcolor='white')
+    graph.node('D', 'Nada D', fillcolor='#f8f4e9')
+    graph.node('E', 'Nada E', fillcolor='#f8f4e9')
+    graph.node('F', 'Nada F', fillcolor='#f8f4e9')
     
-    # Edge styling
-    graph.attr('edge', color='#94a3b8', fontcolor='#cbd5e1')
-    
-    # Node
-    graph.node('C', 'Start (C)', shape='doublecircle', fillcolor='#8b5cf6', color='#a78bfa')
-    graph.node('D', 'Nada D')
-    graph.node('E', 'Nada E')
-    graph.node('F', 'Nada F')
-    
-    # Edge (Transisi)
-    graph.edge('C', 'D', label='1')
-    graph.edge('D', 'E', label='1')
-    graph.edge('E', 'F', label='0.5')
+    graph.edge('C', 'D', label='Transisi 1')
+    graph.edge('D', 'E', label='Transisi 1')
+    graph.edge('E', 'F', label='Transisi 0.5')
     graph.edge('F', 'C', label='Loop')
     
     st.graphviz_chart(graph)
     st.markdown('</div>', unsafe_allow_html=True)
 
-st.markdown('<hr class="custom-divider">', unsafe_allow_html=True)
+# Music staff decoration
+st.markdown('<div class="music-staff"></div>', unsafe_allow_html=True)
 
 # --- BAGIAN 2: MARKOV CHAIN ---
-st.markdown('<h2 class="section-header"><span class="section-icon">🎲</span>2. Markov Chain (Probabilitas)</h2>', unsafe_allow_html=True)
-
-st.markdown('<div class="role-badge markov-badge">🎵 Peran: Pengarang Melodi yang Kreatif</div>', unsafe_allow_html=True)
+st.markdown('<div class="section-container">', unsafe_allow_html=True)
 
 st.markdown("""
-<div class="info-card">
-<p style="color:#e2e8f0; font-size:1.05rem; line-height:1.7;">
-Agar musik tidak kaku, kami menggunakan <strong style="color:#f59e0b">Markov Chain</strong> untuk menentukan <em>langkah selanjutnya</em> berdasarkan <em>langkah saat ini</em>.
-Bayangkan AI melempar dadu untuk setiap ketukan:
-</p>
+<div class="section-header">
+    <div class="section-number">II</div>
+    <h2 class="section-title">Markov Chain</h2>
 </div>
 """, unsafe_allow_html=True)
 
-# Metrics Cards
-c1, c2, c3 = st.columns(3, gap="large")
+st.markdown('<div class="role-badge">🎲 Pengarang Melodi yang Kreatif</div>', unsafe_allow_html=True)
 
-with c1:
-    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-    st.markdown('<p style="color:#fbbf24; font-size:2.5rem; font-weight:800; margin:0;">60%</p>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#f8fafc; font-weight:600; font-size:1.1rem;">Stepwise<br><span style="color:#94a3b8; font-size:0.9rem;">Langkah Pendek</span></p>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#cbd5e1; font-size:0.9rem; margin-top:1rem;">Nada naik/turun ke tetangganya (misal: Do ke Re). Membuat melodi mengalir.</p>', unsafe_allow_html=True)
-    st.markdown('<div style="height:4px; background:linear-gradient(90deg,#f59e0b,#fbbf24); border-radius:2px; margin-top:1rem;"></div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+st.markdown("""
+<div class="content-box">
+    <p style="color:#3c3c3c; line-height:1.8; font-size:1.05rem;">
+    Agar musik tidak kaku, kami menggunakan <strong style="color:#8B7355">Markov Chain</strong> untuk menentukan 
+    <em>langkah selanjutnya</em> berdasarkan <em>langkah saat ini</em>. Bayangkan AI melempar dadu untuk setiap ketukan:
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
-with c2:
-    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-    st.markdown('<p style="color:#3b82f6; font-size:2.5rem; font-weight:800; margin:0;">30%</p>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#f8fafc; font-weight:600; font-size:1.1rem;">Harmonic Leap<br><span style="color:#94a3b8; font-size:0.9rem;">Lompatan</span></p>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#cbd5e1; font-size:0.9rem; margin-top:1rem;">Melompat ke nada Chord (misal: Do ke Sol). Memberikan variasi.</p>', unsafe_allow_html=True)
-    st.markdown('<div style="height:4px; background:linear-gradient(90deg,#3b82f6,#06b6d4); border-radius:2px; margin-top:1rem;"></div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+# Metric cards
+col1, col2, col3 = st.columns(3, gap="large")
 
-with c3:
-    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-    st.markdown('<p style="color:#10b981; font-size:2.5rem; font-weight:800; margin:0;">10%</p>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#f8fafc; font-weight:600; font-size:1.1rem;">Rhythmic<br><span style="color:#94a3b8; font-size:0.9rem;">Variasi</span></p>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#cbd5e1; font-size:0.9rem; margin-top:1rem;">Variasi ritme cepat/lambat agar tidak monoton.</p>', unsafe_allow_html=True)
-    st.markdown('<div style="height:4px; background:linear-gradient(90deg,#10b981,#34d399); border-radius:2px; margin-top:1rem;"></div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+with col1:
+    st.markdown("""
+    <div class="metric-card">
+        <div class="metric-value">60%</div>
+        <h3 style="color:#3c3c3c; margin:0.5rem 0; font-weight:600;">Stepwise</h3>
+        <p style="color:#666; font-size:0.9rem; margin:0;">Langkah Pendek</p>
+        <div style="height:4px; background:#f0ebe0; border-radius:2px; margin:1rem 0;">
+            <div style="width:60%; height:100%; background:#8B7355; border-radius:2px;"></div>
+        </div>
+        <p style="color:#666; font-size:0.9rem; margin-top:1rem;">Nada naik/turun ke tetangganya (misal: Do ke Re)</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-st.markdown('<hr class="custom-divider">', unsafe_allow_html=True)
+with col2:
+    st.markdown("""
+    <div class="metric-card">
+        <div class="metric-value">30%</div>
+        <h3 style="color:#3c3c3c; margin:0.5rem 0; font-weight:600;">Harmonic Leap</h3>
+        <p style="color:#666; font-size:0.9rem; margin:0;">Lompatan</p>
+        <div style="height:4px; background:#f0ebe0; border-radius:2px; margin:1rem 0;">
+            <div style="width:30%; height:100%; background:#D4AF37; border-radius:2px;"></div>
+        </div>
+        <p style="color:#666; font-size:0.9rem; margin-top:1rem;">Melompat ke nada Chord (misal: Do ke Sol)</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col3:
+    st.markdown("""
+    <div class="metric-card">
+        <div class="metric-value">10%</div>
+        <h3 style="color:#3c3c3c; margin:0.5rem 0; font-weight:600;">Rhythmic</h3>
+        <p style="color:#666; font-size:0.9rem; margin:0;">Variasi</p>
+        <div style="height:4px; background:#f0ebe0; border-radius:2px; margin:1rem 0;">
+            <div style="width:10%; height:100%; background:#8B7355; border-radius:2px;"></div>
+        </div>
+        <p style="color:#666; font-size:0.9rem; margin-top:1rem;">Variasi ritme cepat/lambat agar tidak monoton</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)
+
+# Piano decoration
+st.markdown('<div class="piano-decoration"></div>', unsafe_allow_html=True)
 
 # --- BAGIAN 3: PATTERN ---
-st.markdown('<h2 class="section-header"><span class="section-icon">🥁</span>3. Pattern-Based Accompaniment</h2>', unsafe_allow_html=True)
-
-st.markdown('<div class="role-badge pattern-badge">🎸 Peran: Penentu Identitas Genre</div>', unsafe_allow_html=True)
+st.markdown('<div class="section-container">', unsafe_allow_html=True)
 
 st.markdown("""
-<div class="info-card">
-<p style="color:#e2e8f0; font-size:1.05rem; line-height:1.7;">
-Berbeda dengan melodi yang <em>Generative</em> (dikarang di tempat), instrumen pengiring (Drum, Bass, Chord) menggunakan 
-<strong style="color:#10b981">Pola Statis (Fixed Pattern)</strong> untuk menjaga identitas genre.
-</p>
+<div class="section-header">
+    <div class="section-number">III</div>
+    <h2 class="section-title">Pattern-Based Accompaniment</h2>
 </div>
 """, unsafe_allow_html=True)
 
-# Expandable Pattern Library
+st.markdown('<div class="role-badge">🥁 Penentu Identitas Genre</div>', unsafe_allow_html=True)
+
+st.markdown("""
+<div class="content-box">
+    <p style="color:#3c3c3c; line-height:1.8; font-size:1.05rem;">
+    Berbeda dengan melodi yang <em>Generative</em> (dikarang di tempat), instrumen pengiring (Drum, Bass, Chord) menggunakan 
+    <strong style="color:#8B7355">Pola Statis (Fixed Pattern)</strong> untuk menjaga identitas genre.
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
 with st.expander("🔍 **Lihat Detail Pola (Pattern Library)**", expanded=False):
     st.markdown("""
-    <div class="pattern-table">
-    <table style="width:100%; border-collapse: collapse;">
+    <table class="vintage-table">
         <thead>
             <tr>
-                <th style="background:rgba(139, 92, 246, 0.3);">Genre</th>
-                <th style="background:rgba(139, 92, 246, 0.3);">Pola Drum</th>
-                <th style="background:rgba(139, 92, 246, 0.3);">Gaya Bass</th>
-                <th style="background:rgba(139, 92, 246, 0.3);">Gaya Piano</th>
+                <th>Genre</th>
+                <th>Pola Drum</th>
+                <th>Gaya Bass</th>
+                <th>Gaya Piano</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td><strong style="color:#fbbf24">Pop</strong></td>
+                <td><strong style="color:#8B7355">Pop</strong></td>
                 <td>Straight Beat (Kick 1&3)</td>
                 <td>Root Notes (Lurus)</td>
                 <td>Block Chords (Panjang)</td>
             </tr>
             <tr>
-                <td><strong style="color:#3b82f6">Jazz</strong></td>
+                <td><strong style="color:#8B7355">Jazz</strong></td>
                 <td>Swing Beat (Ride Cymbal)</td>
                 <td>Walking Bass (Jalan)</td>
                 <td>Comping (Syncopated)</td>
             </tr>
             <tr>
-                <td><strong style="color:#10b981">Ballad</strong></td>
+                <td><strong style="color:#8B7355">Ballad</strong></td>
                 <td>Soft Beat (Rimshot)</td>
                 <td>Root & 5th (Jarang)</td>
                 <td>Arpeggio (Petikan)</td>
             </tr>
         </tbody>
     </table>
-    </div>
     """, unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)
 
 # Footer
 st.markdown("""
-<div class="music-footer">
-    <p>© 2025 Kelompok 5 - Teknik Informatika. Dibuat dengan ❤️ menggunakan Python & Streamlit.</p>
-    <p style="margin-top:0.5rem; color:#64748b; font-size:0.85rem;">
-    AI Music Composer | Teori Bahasa dan Otomata | Semester 3
+<div class="elegant-footer">
+    <p>© 2025 Kelompok 5 - Teknik Informatika</p>
+    <p style="margin-top:0.5rem; color:#999; font-size:0.85rem;">
+    Dibuat dengan Python & Streamlit | Teori Bahasa dan Otomata
     </p>
 </div>
 """, unsafe_allow_html=True)
 
-# Add some decorative elements
-st.markdown("""
-<style>
-    /* Animasi not musik */
-    @keyframes floatNote {
-        0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.1; }
-        50% { transform: translateY(-10px) rotate(5deg); opacity: 0.15; }
-    }
-    
-    .decoration-note {
-        position: fixed;
-        font-size: 2rem;
-        animation: floatNote 8s ease-in-out infinite;
-        z-index: -1;
-        pointer-events: none;
-    }
-    
-    .note-1 { top: 20%; left: 5%; animation-delay: 0s; }
-    .note-2 { top: 40%; right: 10%; animation-delay: 2s; }
-    .note-3 { bottom: 30%; left: 15%; animation-delay: 4s; }
-    .note-4 { bottom: 15%; right: 5%; animation-delay: 6s; }
-</style>
-
-<div class="decoration-note note-1">♪</div>
-<div class="decoration-note note-2">♫</div>
-<div class="decoration-note note-3">♬</div>
-<div class="decoration-note note-4">🎵</div>
-""", unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
