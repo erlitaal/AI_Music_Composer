@@ -1,41 +1,43 @@
 import streamlit as st
 import graphviz
 
-# HANYA CSS SANGAT MINIMAL
 st.markdown("""
 <style>
-    /* Import font untuk judul saja */
     @import url('https://fonts.googleapis.com/css2?family=Droid+Serif:wght@700&display=swap');
     
-    /* Hanya sembunyikan ikon header */
-    [data-testid="stHeaderActionElements"] { 
-        display: none !important; 
-    }
+    /* Sembunyikan ikon header */
+    [data-testid="stHeaderActionElements"] { display: none !important; }
     
-    /* HANYA ubah background color */
-    .stApp {
-        background-color: #FAF9F6 !important;
-    }
+    /* Background cream */
+    .stApp { background-color: #FAF9F6 !important; }
     
-    /* HANYA ubah font judul */
-    h1, h2 {
+    /* Font judul */
+    h1, h2, h3, h4, h5, h6 {
         font-family: 'Droid Serif', serif !important;
         font-weight: 700 !important;
         color: #2C3E50 !important;
     }
     
-    h1 { 
-        font-size: 2.5rem !important; 
-        margin-bottom: 1rem !important; 
+    h1 { font-size: 2.5rem !important; margin-bottom: 1rem !important; }
+    h2 { font-size: 1.8rem !important; margin-top: 2rem !important; margin-bottom: 1rem !important; }
+    
+    /* Warna teks utama */
+    .main .block-container {
+        color: #2C3E50 !important;
     }
     
-    h2 { 
-        font-size: 1.8rem !important; 
-        margin-top: 2rem !important; 
-        margin-bottom: 1rem !important; 
+    p, li, td, th, span, div:not([class*="stAlert"]) {
+        color: #2C3E50 !important;
     }
     
-    /* Sedikit styling untuk container graphviz */
+    /* Divider */
+    hr {
+        border-color: #BDC3C7 !important;
+        margin: 2rem 0 !important;
+        opacity: 0.5;
+    }
+    
+    /* Container untuk graphviz */
     .graphviz-container {
         border: 1px solid #ECF0F1;
         border-radius: 12px;
@@ -45,7 +47,37 @@ st.markdown("""
         margin: 1rem 0;
     }
     
-    /* Footer styling sederhana */
+    /* Alert boxes styling sederhana - tanpa mengubah struktur Streamlit */
+    div[data-testid="stAlert"] {
+        border: 1px solid #D1D5D8 !important;
+        border-left: 4px solid #95A5A6 !important;
+        background-color: rgba(255, 255, 255, 0.9) !important;
+    }
+    
+    /* Info alert */
+    div.stAlert:has(> div > div > svg[data-testid="InfoIcon"]) {
+        border-left-color: #7F8C8D !important;
+    }
+    
+    /* Warning alert */
+    div.stAlert:has(> div > div > svg[data-testid="WarningIcon"]) {
+        border-left-color: #95A5A6 !important;
+    }
+    
+    /* Success alert */
+    div.stAlert:has(> div > div > svg[data-testid="SuccessIcon"]) {
+        border-left-color: #5D6D7E !important;
+    }
+    
+    /* Metric cards */
+    [data-testid="stMetric"] {
+        background-color: rgba(255, 255, 255, 0.9);
+        border: 1px solid #ECF0F1;
+        border-radius: 8px;
+        padding: 1rem;
+    }
+    
+    /* Footer */
     .footer {
         text-align: center;
         color: #95A5A6 !important;
@@ -59,7 +91,6 @@ st.markdown("""
 
 st.set_page_config(page_title="Cara Kerja AI", page_icon="🧠", layout="wide")
 
-# KONTEN UTAMA - TIDAK ADA PERUBAHAN DARI VERSI ASLI
 st.title("🧠 Di Balik Layar: Bedah Logika AI")
 st.markdown("""
 Aplikasi ini bukan sekadar pemutar musik acak. Kami menggabungkan **Teori Musik** dengan **Ilmu Komputer (TBO)** untuk menciptakan komposisi yang harmonis. Berikut adalah 3 pilar utamanya:
@@ -71,12 +102,13 @@ st.divider()
 st.header("1. Finite State Automata (FSA)")
 st.info("**Peran:** Polisi Lalu Lintas Nada 👮‍♂️")
 
-col1, col2 = st.columns([2, 1])
+col1, col2 = st.columns([1.5, 1])
 
 with col1:
     st.markdown("""
     Dalam mata kuliah TBO, FSA didefinisikan sebagai mesin yang memiliki **State** dan **Transisi**. 
     Di aplikasi ini:
+    
     * **State ($Q$):** Adalah nada-nada dalam piano (C, D, E, F, G, A, B).
     * **Input ($\Sigma$):** Adalah aturan Mood (Mayor/Minor).
     * **Fungsi Transisi ($\delta$):** Logika yang *melarang* AI memilih nada fals.
@@ -86,24 +118,24 @@ with col1:
     """)
 
 with col2:
-    st.caption("Visualisasi FSA Sederhana:")
-    # Membuat Diagram FSA menggunakan Graphviz
+    st.markdown('<div class="graphviz-container">', unsafe_allow_html=True)
+    st.markdown('<div style="text-align: center; font-weight: bold; color: #2C3E50; margin-bottom: 1rem;">Visualisasi FSA Sederhana</div>', unsafe_allow_html=True)
+    
     graph = graphviz.Digraph()
-    graph.attr(rankdir='LR', size='3')
+    graph.attr(rankdir='LR', size='8,4')
     
-    # Node
     graph.node('C', 'Start (C)', shape='doublecircle')
-    graph.node('D', 'Nada D')
-    graph.node('E', 'Nada E')
-    graph.node('F', 'Nada F')
+    graph.node('D', 'Nada D', shape='circle')
+    graph.node('E', 'Nada E', shape='circle')
+    graph.node('F', 'Nada F', shape='circle')
     
-    # Edge (Transisi)
-    graph.edge('C', 'D', label='1')
-    graph.edge('D', 'E', label='1')
-    graph.edge('E', 'F', label='0.5')
-    graph.edge('F', 'C', label='Loop')
+    graph.edge('C', 'D', label=' 1')
+    graph.edge('D', 'E', label=' 1')
+    graph.edge('E', 'F', label=' 0.5')
+    graph.edge('F', 'C', label=' Loop')
     
-    st.graphviz_chart(graph)
+    st.graphviz_chart(graph, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 st.divider()
 
@@ -137,7 +169,7 @@ st.markdown("""
 Berbeda dengan melodi yang *Generative* (dikarang di tempat), instrumen pengiring (Drum, Bass, Chord) menggunakan **Pola Statis (Fixed Pattern)** untuk menjaga identitas genre.
 """)
 
-with st.expander("🔍 Lihat Detail Pola (Pattern Library)"):
+with st.expander("🔍 Lihat Detail Pola (Pattern Library)", expanded=False):
     st.markdown("""
     | Genre | Pola Drum | Gaya Bass | Gaya Piano |
     | :--- | :--- | :--- | :--- |
