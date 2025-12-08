@@ -94,7 +94,7 @@ with c1:
         nim="1247050126", 
         peran="Backend & Audio Engineer",
         url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Bob",
-        quote="\"Mengubah angka menjadi nada.\"",
+        quote="\"Good things take time.\"",
         link_ig="https://www.instagram.com/azmiptr_"
     )
 
@@ -103,7 +103,7 @@ with c2:
         nama="Alden Shalih Falah", 
         nim="1247050050", 
         peran="Frontend & UI/UX",
-        url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Data",
+        url_foto="https://raw.githubusercontent.com/erlitaal/ai_music_composer/main/images/foto alden.jpg",
         quote="\"The moment you drop 'if' is the moment your life starts moving forward.\"",
         link_ig="https://www.instagram.com/dennn.26sf"
     )
