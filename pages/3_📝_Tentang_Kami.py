@@ -76,11 +76,11 @@ with col_a:
 with col_b:
     kartu_anggota(
         nama="Erlita Amelia", 
-        nim="12121212", 
+        nim="1247050088", 
         peran="Data search & QA",
         url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka",
         quote="\"Mengubah angka menjadi nada.\"",
-        link_ig="https://www.instagram.com/"
+        link_ig="https://www.instagram.com/erlitaall"
     )
 
 st.write("---")
@@ -91,11 +91,11 @@ c1, c2, c3 = st.columns(3)
 with c1:
     kartu_anggota(
         nama="Azmi", 
-        nim="12121212", 
+        nim="1247050126", 
         peran="Backend & Audio Engineer",
         url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Bob",
         quote="\"Mengubah angka menjadi nada.\"",
-        link_ig="https://www.instagram.com/"
+        link_ig="https://www.instagram.com/azmiptr_"
     )
 
 with c2:
