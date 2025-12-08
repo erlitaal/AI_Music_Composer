@@ -218,7 +218,7 @@ with col_alden:
 with col_ahmad:
     kartu_anggota(
         nama="Ahmad Maftuh Rojak", 
-        nim="12121212", 
+        nim="1247050100", 
         peran="Frontend & UI/UX",
         url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Jack",
         # HILANGKAN TANDA KUTIP GANDA DI SEKITAR QUOTE DI SINI
