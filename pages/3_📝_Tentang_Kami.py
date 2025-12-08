@@ -59,7 +59,7 @@ def styling_global_component(background_color="#e8e9e4", accent_color="#5a6a62")
         /* GAYA KARTU ANGGOTA KESELURUHAN */
         .profile-card {{
             text-align: center; 
-            padding: 10px; 
+            padding: 15px; /* Sedikit lebih besar */
             background-color: #ffffff; 
             border: 1px solid #d0d2cc; 
             border-radius: 10px; 
@@ -132,19 +132,24 @@ def styling_global_component(background_color="#e8e9e4", accent_color="#5a6a62")
 # KOMPONEN 2: KARTU ANGGOTA (Versi Compact Anti-Bug)
 # =================================================================
 def kartu_anggota(nama, nim, peran, url_foto, quote, link_ig):
-    # Membersihkan tanda kutip ganda dari quote (ini dilakukan di fungsi jika ada yang terlewat)
+    # Membersihkan tanda kutip ganda dari quote
     cleaned_quote = quote.strip('"') 
     
+    # Menghindari karakter khusus di nama dan peran agar tidak merusak HTML (jika ada)
+    # Walaupun di sini kemungkinan kecil terjadi, ini praktik yang baik.
+    safe_nama = nama.replace('<', '&lt;').replace('>', '&gt;')
+    safe_peran = peran.replace('<', '&lt;').replace('>', '&gt;')
+
     # SELURUH KARTU DIRENDER DALAM SATU BLOK HTML
     html_code = f"""
     <div class="profile-card">
         <a href="{link_ig}" target="_blank" class="profile-link" title="Klik untuk ke Instagram">
             <img src="{url_foto}" class="profile-img">
         </a>
-        <h4 style="margin: 5px 0 0px 0;">{nama}</h4>
+        <h4 style="margin: 5px 0 0px 0;">{safe_nama}</h4>
         <p class="nim">NIM: {nim}</p>
         
-        <span class="role-badge">{peran}</span> 
+        <span class="role-badge">{safe_peran}</span> 
         
         <div class="quote-text">
             "{cleaned_quote}"
@@ -176,8 +181,8 @@ with col_fahri:
         nama="Fahri Khairun Ariansyah", 
         nim="1247050084", 
         peran="Lead Developer & Backend",
+        # URL GAMBAR PENTING: Gunakan gambar yang benar-benar bisa diakses
         url_foto="https://raw.githubusercontent.com/erlitaal/ai_music_composer/main/images/fahrii.png", 
-        # HILANGKAN TANDA KUTIP GANDA DI SEKITAR QUOTE DI SINI
         quote="People can only save themselves. One person saving another is impossible.",
         link_ig="https://www.instagram.com/p_ftttt"
     )
@@ -188,7 +193,6 @@ with col_erlita:
         nim="1247050088", 
         peran="Data search & QA",
         url_foto="https://raw.githubusercontent.com/erlitaal/ai_music_composer/main/images/foto erlita.jpg",
-        # HILANGKAN TANDA KUTIP GANDA DI SEKITAR QUOTE DI SINI
         quote="Mengubah angka menjadi nada.",
         link_ig="https://www.instagram.com/erlitaall"
     )
@@ -199,7 +203,6 @@ with col_azmi:
         nim="1247050126", 
         peran="Backend & Audio Engineer",
         url_foto="https://raw.githubusercontent.com/erlitaal/ai_music_composer/main/images/foto azmi.jpg",
-        # HILANGKAN TANDA KUTIP GANDA DI SEKITAR QUOTE DI SINI
         quote="Good things take time.",
         link_ig="https://www.instagram.com/azmiptr_"
     )
@@ -210,7 +213,6 @@ with col_alden:
         nim="1247050050", 
         peran="Frontend & UI/UX",
         url_foto="https://raw.githubusercontent.com/erlitaal/ai_music_composer/main/images/foto alden.jpg",
-        # HILANGKAN TANDA KUTIP GANDA DI SEKITAR QUOTE DI SINI
         quote="The moment you drop 'if' is the moment your life starts moving forward.",
         link_ig="https://www.instagram.com/dennn.26sf"
     )
@@ -218,10 +220,10 @@ with col_alden:
 with col_ahmad:
     kartu_anggota(
         nama="Ahmad Maftuh Rojak", 
-        nim="1247050100", 
+        nim="12121212", 
         peran="Frontend & UI/UX",
+        # URL GAMBAR ALTERNATIF (Avatar generator jika gambar utama bermasalah)
         url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Jack",
-        # HILANGKAN TANDA KUTIP GANDA DI SEKITAR QUOTE DI SINI
         quote="growing freely.",
         link_ig="https://www.instagram.com/stagarling"
     )
