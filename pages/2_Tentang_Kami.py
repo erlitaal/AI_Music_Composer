@@ -219,8 +219,8 @@ with l1:
 with l2:
     team_card(
         "Erlita Amelia", "1247050088", "DATA EXPERT",
-        "https://raw.githubusercontent.com/erlitaal/ai_music_composer/main/images/foto erlita.jpg", # Ganti foto nanti
-        "Mencari jarum dalam tumpukan data untuk harmoni yang sempurna.",
+        "https://raw.githubusercontent.com/erlitaal/ai_music_composer/main/images/foto erlita2.jpg", # Ganti foto nanti
+        "Seberat-beratnya tugas kuliah, akan lebih ringan jika tidak dikerjakan.",
         "https://instagram.com/erlitaall"
     )
 
