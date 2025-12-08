@@ -34,7 +34,7 @@ def styling_global_component(background_color="#e8e9e4", accent_color="#5a6a62")
         .profile-img {{
             width: 100%;             
             max-width: 120px;     
-            height: 120px; /* Tinggi Tetap agar semua kartu seragam */
+            height: 120px; 
             border-radius: 15px;     
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: block;
@@ -132,7 +132,7 @@ def styling_global_component(background_color="#e8e9e4", accent_color="#5a6a62")
 # KOMPONEN 2: KARTU ANGGOTA (Versi Compact Anti-Bug)
 # =================================================================
 def kartu_anggota(nama, nim, peran, url_foto, quote, link_ig):
-    # Membersihkan tanda kutip ganda dari quote (jika ada)
+    # Membersihkan tanda kutip ganda dari quote (ini dilakukan di fungsi jika ada yang terlewat)
     cleaned_quote = quote.strip('"') 
     
     # SELURUH KARTU DIRENDER DALAM SATU BLOK HTML
@@ -177,7 +177,8 @@ with col_fahri:
         nim="1247050084", 
         peran="Lead Developer & Backend",
         url_foto="https://raw.githubusercontent.com/erlitaal/ai_music_composer/main/images/fahrii.png", 
-        quote="\"People can only save themselves. One person saving another is impossible.\"",
+        # HILANGKAN TANDA KUTIP GANDA DI SEKITAR QUOTE DI SINI
+        quote="People can only save themselves. One person saving another is impossible.",
         link_ig="https://www.instagram.com/p_ftttt"
     )
 
@@ -187,7 +188,8 @@ with col_erlita:
         nim="1247050088", 
         peran="Data search & QA",
         url_foto="https://raw.githubusercontent.com/erlitaal/ai_music_composer/main/images/foto erlita.jpg",
-        quote="\"Mengubah angka menjadi nada.\"",
+        # HILANGKAN TANDA KUTIP GANDA DI SEKITAR QUOTE DI SINI
+        quote="Mengubah angka menjadi nada.",
         link_ig="https://www.instagram.com/erlitaall"
     )
 
@@ -197,7 +199,8 @@ with col_azmi:
         nim="1247050126", 
         peran="Backend & Audio Engineer",
         url_foto="https://raw.githubusercontent.com/erlitaal/ai_music_composer/main/images/foto azmi.jpg",
-        quote="\"Good things take time.\"",
+        # HILANGKAN TANDA KUTIP GANDA DI SEKITAR QUOTE DI SINI
+        quote="Good things take time.",
         link_ig="https://www.instagram.com/azmiptr_"
     )
 
@@ -207,19 +210,19 @@ with col_alden:
         nim="1247050050", 
         peran="Frontend & UI/UX",
         url_foto="https://raw.githubusercontent.com/erlitaal/ai_music_composer/main/images/foto alden.jpg",
-        quote="\"The moment you drop 'if' is the moment your life starts moving forward.\"",
+        # HILANGKAN TANDA KUTIP GANDA DI SEKITAR QUOTE DI SINI
+        quote="The moment you drop 'if' is the moment your life starts moving forward.",
         link_ig="https://www.instagram.com/dennn.26sf"
     )
 
 with col_ahmad:
-    # Perbaikan: Mengganti URL dummy Dicebear dengan URL file gambar Anda jika ada
-    # Jika tidak ada, Dicebear tetap boleh digunakan
     kartu_anggota(
         nama="Ahmad Maftuh Rojak", 
         nim="12121212", 
         peran="Frontend & UI/UX",
         url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Jack",
-        quote="\"growing freely.\"",
+        # HILANGKAN TANDA KUTIP GANDA DI SEKITAR QUOTE DI SINI
+        quote="growing freely.",
         link_ig="https://www.instagram.com/stagarling"
     )
 
