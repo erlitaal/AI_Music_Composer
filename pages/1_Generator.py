@@ -15,7 +15,7 @@ from scipy.io import wavfile
 
 
 # --- PAGE CONFIG ---
-st.set_page_config(page_title="Generator Musik", page_icon="🎵", layout="wide")
+st.set_page_config(page_title="Generator Musik", page_icon="🎵", layout="wide", initial_sidebar_state="collapsed")
 
 # --- INITIALIZE SESSION STATE ---
 if 'history' not in st.session_state:
@@ -24,7 +24,70 @@ if 'current_mood' not in st.session_state:
     st.session_state['current_mood'] = None
 if 'is_generated' not in st.session_state:
     st.session_state['is_generated'] = False
+
+# --- CSS HIDE UI & NAVBAR ---
+st.markdown("""
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lato:wght@300;400&display=swap');
     
+    /* SEMBUNYIKAN UI BAWAAN */
+    [data-testid="stSidebar"] { display: none; }
+    [data-testid="stHeader"] { background-color: transparent; }
+    [data-testid="stToolbar"] { visibility: hidden; }
+    [data-testid="stDecoration"] { display: none; }
+    
+    /* BACKGROUND */
+    .stApp { background-color: #E8E8E5; }
+    
+    /* NAVBAR */
+    div[data-testid="stPageLink-NavLink"] {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+    div[data-testid="stPageLink-NavLink"] p {
+        font-family: 'Lato', sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #666 !important;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    div[data-testid="stPageLink-NavLink"]:hover p {
+        color: #000 !important;
+        text-decoration: underline;
+    }
+    div[data-testid="stPageLink-NavLink"] svg { display: none; }
+    
+    /* TOMBOL BIASA (GENERATE/DOWNLOAD) */
+    .stButton > button {
+        background-color: transparent;
+        border: 2px solid #000;
+        color: #000;
+        border-radius: 0;
+        font-weight: bold;
+    }
+    .stButton > button:hover {
+        background-color: #000;
+        color: #fff;
+        border-color: #000;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# --- NAVBAR ---
+c_nav1, c_nav2, c_nav3, c_nav4 = st.columns([3, 1, 1, 1])
+with c_nav1:
+    st.markdown("<h3 style='margin:0; font-family: Playfair Display; color:black;'>KELOMPOK 5</h3>", unsafe_allow_html=True)
+with c_nav2:
+    st.page_link("Home.py", label="HOME", use_container_width=True)
+with c_nav3:
+    st.page_link("pages/1_Generator.py", label="GENERATOR", use_container_width=True)
+with c_nav4:
+    st.page_link("pages/2_Tentang_Kami.py", label="ABOUT", use_container_width=True)
+
+st.write("---")
+
 # ==========================================
 # 1. DATABASE & CONFIG
 # ==========================================
@@ -607,7 +670,7 @@ with tab1:
              st.markdown("""
             <div style="text-align: center; color: #999; margin-top: 50px;">
                 <h3>Select a Mood</h3>
-                <p>Silakan pilih mood di sebelah kiri.</p>
+                <p>Silakan pilih mood.</p>
             </div>
             """, unsafe_allow_html=True)
         else:
