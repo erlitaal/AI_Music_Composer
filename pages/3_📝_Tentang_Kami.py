@@ -2,68 +2,177 @@ import streamlit as st
 
 st.set_page_config(page_title="Tentang Kami", page_icon="👥", layout="wide")
 
-# ==========================================
-# CSS CUSTOM (GAYA TAMPILAN)
-# ==========================================
-st.markdown("""
-<style>
-    /* HILANGKAN IKON RANTAI DI HEADER */
-    [data-testid="stHeaderActionElements"] {
-        display: none !important;
-    }
+# =================================================================
+# KOMPONEN 1: STYLING GLOBAL & TEMA
+# Warna Tema: Background #e8e9e4 (Soft Grey-Green), Aksen #5a6a62 (Dark Grey-Green)
+# =================================================================
+def styling_global_component(background_color="#e8e9e4", accent_color="#5a6a62"):
+    st.markdown(f"""
+    <style>
+        /* 1. WARNA GLOBAL / BACKGROUND APLIKASI */
+        .stApp {{
+            background-color: {background_color};
+            color: #333333;
+        }}
 
-    /* GAYA FOTO PROFIL */
-    .profile-img {
-        width: 100%;             /* Lebar mengikuti kolom */
-        max-width: 150px;        /* Maksimal 150px biar gak kegedean */
-        border-radius: 15px;     /* Sudut tumpul */
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        display: block;
-        margin-bottom: 10px;
-        cursor: pointer;         /* Ubah kursor jadi tangan */
-    }
+        /* --- PENINGKATAN POIN 1 (HIRARKI VISUAL: Judul & Sub-judul) --- */
+        h1 {{
+            margin-bottom: 25px !important; 
+        }}
+        h3 {{
+            color: #333333;
+            border-bottom: 2px solid {accent_color}; 
+            padding-bottom: 5px;
+        }}
+        /* ------------------------------------------- */
 
-    /* EFEK SAAT MOUSE DIARAHKAN (HOVER) */
-    .profile-img:hover {
-        transform: scale(1.08);  /* Membesar */
-        box-shadow: 0 10px 20px rgba(0,0,0,0.2); /* Bayangan timbul */
-        filter: brightness(1.1); /* Sedikit lebih terang */
-    }
+        /* HILANGKAN IKON RANTAI DI HEADER */
+        [data-testid="stHeaderActionElements"] {{
+            display: none !important;
+        }}
+
+        /* GAYA FOTO PROFIL */
+        .profile-img {{
+            width: 100%;             
+            max-width: 120px; /* Lebih kecil agar muat di 5 kolom */    
+            height: 120px; /* Tentukan tinggi agar seragam */
+            border-radius: 15px;     
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: block;
+            margin: 0 auto 10px auto; 
+            cursor: pointer;
+            object-fit: cover; /* Penting agar foto tidak terdistorsi */
+            border: 3px solid {accent_color}; 
+        }}
+
+        /* EFEK HOVER PADA FOTO */
+        .profile-img:hover {{
+            transform: scale(1.08);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            filter: brightness(1.1);
+        }}
+        
+        /* GAYA LINK IG */
+        a.profile-link {{
+            text-decoration: none;
+        }}
+
+        /* GAYA KARTU ANGGOTA KESELURUHAN */
+        .profile-card {{
+            text-align: center; 
+            padding: 10px; 
+            background-color: #ffffff; 
+            border: 1px solid #d0d2cc; 
+            border-radius: 10px; 
+            height: 100%;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }}
+
+        /* EFEK HOVER PADA KARTU ANGGOTA */
+        .profile-card:hover {{
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+        }}
+
+        /* --- PENINGKATAN POIN 2 (ROLE BADGE) --- */
+        .role-badge {{
+            display: inline-block;
+            padding: 4px 10px;
+            margin: 5px 0;
+            border-radius: 20px;
+            background-color: {accent_color};
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }}
+        /* ------------------------------------------- */
+
+
+        /* 2. WARNA GARIS PEMISAH (DIVIDER) */
+        hr {{
+            border-top: 1px solid {accent_color}; 
+            opacity: 0.5;
+        }}
+        
+        /* GAYA TEKS NIM */
+        .profile-card p.nim {{
+            font-size: 0.8rem; 
+            color: #888; 
+            margin: 0;
+        }}
+        
+        /* GAYA QUOTE */
+        .profile-card > div:last-child {{
+            font-style: italic; 
+            font-size: 0.75rem; 
+            color: #6a6a6a !important; 
+            margin-top: 10px;
+        }}
+
+        /* --- PENINGKATAN POIN 3 (TECH STACK GRID) --- */
+        .tech-stack-grid {{
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 10px 20px;
+            padding: 15px;
+            border: 1px dashed #d0d2cc;
+            border-radius: 8px;
+        }}
+        .tech-stack-grid div:nth-child(odd) {{
+            font-weight: bold;
+            color: {accent_color};
+        }}
+        /* ------------------------------------------- */
+        
+    </style>
+    """, unsafe_allow_html=True)
+
+
+# =================================================================
+# KOMPONEN 2: KARTU ANGGOTA (Versi Compact dengan Badge)
+# =================================================================
+def kartu_anggota(nama, nim, peran, url_foto, quote, link_ig):
+    # Mengambil quote tanpa tanda kutip ganda yang Anda tambahkan di data
+    cleaned_quote = quote.strip('"') 
     
-    /* GAYA LINK IG (BIAR GAK ADA GARIS BAWAH JELEK) */
-    a.profile-link {
-        text-decoration: none;
-    }
-</style>
-""", unsafe_allow_html=True)
+    html_code = f"""
+    <div class="profile-card">
+        <a href="{link_ig}" target="_blank" class="profile-link" title="Klik untuk ke Instagram">
+            <img src="{url_foto}" class="profile-img">
+        </a>
+        <h4 style="margin: 5px 0 0px 0;">{nama}</h4>
+        <p class="nim">NIM: {nim}</p>
+        
+        <span class="role-badge">{peran}</span> 
+        
+        <div style="font-style: italic; font-size: 0.75rem; color: #666; margin-top: 10px;">
+            "{cleaned_quote}"
+        </div>
+    </div>
+    """
+    st.markdown(html_code, unsafe_allow_html=True)
+
+
+# =================================================================
+# STRUKTUR UTAMA APLIKASI (MAIN APP LOGIC)
+# =================================================================
+
+# 1. Panggil Komponen Styling Global
+styling_global_component(
+    background_color="#e8e9e4", 
+    accent_color="#5a6a62" 
+) 
 
 st.title("👥 Tim Pengembang")
 st.markdown("Aplikasi ini dipersembahkan oleh **Kelompok 5** untuk memenuhi Tugas Besar Mata Kuliah **Teori Bahasa Otomata (TBO)**.")
 st.write("---")
 
-# FUNGSI UNTUK MEMBUAT KARTU PROFIL
-def kartu_anggota(nama, nim, peran, url_foto, quote, link_ig):
-    with st.container():
-        col1, col2 = st.columns([1, 3])
-        with col1:
-            html_code = f"""
-            <a href="{link_ig}" target="_blank" class="profile-link" title="Klik untuk ke Instagram">
-                <img src="{url_foto}" class="profile-img">
-            </a>
-            """
-            st.markdown(html_code, unsafe_allow_html=True)
-            
-        with col2:
-            st.subheader(nama)
-            st.caption(f"NIM: {nim}")
-            st.markdown(f"**Role:** `{peran}`")
-            st.info(f"_{quote}_")
+# 2. Kartu Anggota (Menggunakan 5 Kolom Kompak)
+# Urutan: Fahri, Erlita, Azmi, Alden, Ahmad Maftuh
+col_fahri, col_erlita, col_azmi, col_alden, col_ahmad = st.columns(5)
 
-# --- BARIS 1 (Ketua & Wakil) ---
-col_a, col_b = st.columns(2)
-
-with col_a:
-    # Ganti URL ini dengan nama file lokal nanti (misal: "images/foto_budi.jpg")
+with col_fahri:
     kartu_anggota(
         nama="Fahri Khairun Ariansyah", 
         nim="1247050084", 
@@ -73,7 +182,7 @@ with col_a:
         link_ig="https://www.instagram.com/p_ftttt"
     )
 
-with col_b:
+with col_erlita:
     kartu_anggota(
         nama="Erlita Amelia", 
         nim="1247050088", 
@@ -83,12 +192,7 @@ with col_b:
         link_ig="https://www.instagram.com/erlitaall"
     )
 
-st.write("---")
-
-# --- BARIS 2 (Anggota Lain) ---
-c1, c2, c3 = st.columns(3)
-
-with c1:
+with col_azmi:
     kartu_anggota(
         nama="Azmi Putri Kuswandi", 
         nim="1247050126", 
@@ -98,7 +202,7 @@ with c1:
         link_ig="https://www.instagram.com/azmiptr_"
     )
 
-with c2:
+with col_alden:
     kartu_anggota(
         nama="Alden Shalih Falah", 
         nim="1247050050", 
@@ -108,7 +212,7 @@ with c2:
         link_ig="https://www.instagram.com/dennn.26sf"
     )
 
-with c3:
+with col_ahmad:
     kartu_anggota(
         nama="Ahmad Maftuh Rojak", 
         nim="12121212", 
@@ -119,14 +223,17 @@ with c3:
     )
 
 st.write("---")
+
+# 3. Tech Stack (Menggunakan Grid HTML)
 st.markdown("### 🛠️ Tech Stack yang Digunakan")
 st.markdown("""
-* 🐍 **Python 3.10** (Bahasa Pemrograman Utama)
-* 🌊 **Streamlit** (Framework Web App)
-* 🎹 **MidiUtil** (Generasi File MIDI)
-* 🔊 **Scipy & NumPy** (Pemrosesan Sinyal Audio Digital)
-
-""")
+<div class="tech-stack-grid">
+    <div>🐍 **Python 3.10**</div> <div>Bahasa Pemrograman Utama.</div>
+    <div>🌊 **Streamlit**</div> <div>Framework utama untuk Web App.</div>
+    <div>🎹 **MidiUtil**</div> <div>Untuk Generasi File MIDI.</div>
+    <div>🔊 **Scipy & NumPy**</div> <div>Pemrosesan Sinyal Audio Digital.</div>
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown("""
 <div style="text-align: center; color: #888; font-size: 0.8rem; margin-top: 50px;">
