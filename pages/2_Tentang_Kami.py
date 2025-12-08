@@ -218,10 +218,10 @@ with l1:
 
 with l2:
     team_card(
-        "Erlita Amelia", "12121212", "DATA EXPERT",
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka", # Ganti foto nanti
+        "Erlita Amelia", "1247050088", "DATA EXPERT",
+        "https://raw.githubusercontent.com/erlitaal/ai_music_composer/main/images/foto erlita.jpg", # Ganti foto nanti
         "Mencari jarum dalam tumpukan data untuk harmoni yang sempurna.",
-        "https://instagram.com/"
+        "https://instagram.com/erlitaall"
     )
 
 st.write("") # Spacer
@@ -231,26 +231,26 @@ m1, m2, m3 = st.columns(3)
 
 with m1:
     team_card(
-        "Azmi", "12121212", "AUDIO ENGINEER",
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=Bob", # Ganti foto nanti
-        "Mengatur frekuensi agar enak didengar telinga maupun mesin.",
-        "https://instagram.com/"
+        "Azmi Putri K.", "1247050126", "AUDIO ENGINEER",
+        "https://raw.githubusercontent.com/erlitaal/ai_music_composer/main/images/foto azmi.jpg", # Ganti foto nanti
+        "Good things take time.",
+        "https://instagram.com/azmiptr_"
     )
 
 with m2:
     team_card(
-        "Alden", "12121212", "UI DESIGNER",
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=Data", # Ganti foto nanti
-        "Desain bukan hanya tentang apa yang terlihat, tapi bagaimana rasanya.",
-        "https://instagram.com/"
+        "Alden Shalih F.", "1247050050", "UI DESIGNER",
+        "https://raw.githubusercontent.com/erlitaal/ai_music_composer/main/images/foto alden.jpg", # Ganti foto nanti
+        "The moment you drop ‘if’ is the moment your life starts moving forward.",
+        "https://instagram.com/dennn.26sf"
     )
 
 with m3:
     team_card(
-        "Maftuh", "12121212", "FRONTEND DEV",
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=Jack", # Ganti foto nanti
-        "Menulis kode seindah puisi, merangkai logika sekuat baja.",
-        "https://instagram.com/"
+        "Ahmad Maftuh R.", "1247050100", "FRONTEND DEV",
+        "https://raw.githubusercontent.com/erlitaal/ai_music_composer/main/images/foto maftuh.jpg", # Ganti foto nanti
+        "Bertumbuh bebas.",
+        "https://instagram.com/stagarling"
     )
 
 # Footer
