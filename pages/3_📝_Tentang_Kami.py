@@ -220,7 +220,7 @@ with col_alden:
 with col_ahmad:
     kartu_anggota(
         nama="Ahmad Maftuh Rojak", 
-        nim="12121212", 
+        nim="1247050100", 
         peran="Frontend & UI/UX",
         # URL GAMBAR ALTERNATIF (Avatar generator jika gambar utama bermasalah)
         url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Jack",
