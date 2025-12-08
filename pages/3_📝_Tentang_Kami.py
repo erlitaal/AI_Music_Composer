@@ -78,7 +78,7 @@ with col_b:
         nama="Erlita Amelia", 
         nim="1247050088", 
         peran="Data search & QA",
-        url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka",
+        url_foto="https://raw.githubusercontent.com/erlitaal/ai_music_composer/main/images/foto erlita.jpg",
         quote="\"Mengubah angka menjadi nada.\"",
         link_ig="https://www.instagram.com/erlitaall"
     )
@@ -90,10 +90,10 @@ c1, c2, c3 = st.columns(3)
 
 with c1:
     kartu_anggota(
-        nama="Azmi", 
+        nama="Azmi Putri Kuswandi", 
         nim="1247050126", 
         peran="Backend & Audio Engineer",
-        url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Bob",
+        url_foto="https://raw.githubusercontent.com/erlitaal/ai_music_composer/main/images/foto azmi.jpg",
         quote="\"Good things take time.\"",
         link_ig="https://www.instagram.com/azmiptr_"
     )
