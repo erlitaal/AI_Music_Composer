@@ -231,7 +231,7 @@ m1, m2, m3 = st.columns(3)
 
 with m1:
     team_card(
-        "Azmi Putri K.", "1247050126", "AUDIO ENGINEER",
+        "Azmi Putri K.", "1247050126", "BACKEND DEV",
         "https://raw.githubusercontent.com/erlitaal/ai_music_composer/main/images/foto azmi.jpg", # Ganti foto nanti
         "Good things take time.",
         "https://instagram.com/azmiptr_"
@@ -239,7 +239,7 @@ with m1:
 
 with m2:
     team_card(
-        "Alden Shalih F.", "1247050050", "UI DESIGNER",
+        "Alden Shalih F.", "1247050050", "FRONTEND DEV",
         "https://raw.githubusercontent.com/erlitaal/ai_music_composer/main/images/foto alden.jpg", # Ganti foto nanti
         "The moment you drop ‘if’ is the moment your life starts moving forward.",
         "https://instagram.com/dennn.26sf"
@@ -256,6 +256,6 @@ with m3:
 # Footer
 st.markdown("""
 <div style="text-align: center; color: #666; font-size: 0.8rem; margin-top: 50px; border-top: 1px solid #ccc; padding-top: 20px;">
-    © 2025 Kelompok 5 • Engineering Art
+    © 2025 Kelompok 5 • Informatics Engineering
 </div>
 """, unsafe_allow_html=True)
