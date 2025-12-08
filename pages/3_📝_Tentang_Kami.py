@@ -4,7 +4,6 @@ st.set_page_config(page_title="Tentang Kami", page_icon="👥", layout="wide")
 
 # =================================================================
 # KOMPONEN 1: STYLING GLOBAL & TEMA
-# Warna Tema: Background #e8e9e4 (Soft Grey-Green), Aksen #5a6a62 (Dark Grey-Green)
 # =================================================================
 def styling_global_component(background_color="#e8e9e4", accent_color="#5a6a62"):
     st.markdown(f"""
@@ -34,14 +33,14 @@ def styling_global_component(background_color="#e8e9e4", accent_color="#5a6a62")
         /* GAYA FOTO PROFIL */
         .profile-img {{
             width: 100%;             
-            max-width: 120px; /* Lebih kecil agar muat di 5 kolom */    
-            height: 120px; /* Tentukan tinggi agar seragam */
+            max-width: 120px;     
+            height: 120px; /* Tinggi Tetap agar semua kartu seragam */
             border-radius: 15px;     
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: block;
             margin: 0 auto 10px auto; 
             cursor: pointer;
-            object-fit: cover; /* Penting agar foto tidak terdistorsi */
+            object-fit: cover; 
             border: 3px solid {accent_color}; 
         }}
 
@@ -103,7 +102,7 @@ def styling_global_component(background_color="#e8e9e4", accent_color="#5a6a62")
         }}
         
         /* GAYA QUOTE */
-        .profile-card > div:last-child {{
+        .profile-card .quote-text {{
             font-style: italic; 
             font-size: 0.75rem; 
             color: #6a6a6a !important; 
@@ -130,12 +129,13 @@ def styling_global_component(background_color="#e8e9e4", accent_color="#5a6a62")
 
 
 # =================================================================
-# KOMPONEN 2: KARTU ANGGOTA (Versi Compact dengan Badge)
+# KOMPONEN 2: KARTU ANGGOTA (Versi Compact Anti-Bug)
 # =================================================================
 def kartu_anggota(nama, nim, peran, url_foto, quote, link_ig):
-    # Mengambil quote tanpa tanda kutip ganda yang Anda tambahkan di data
+    # Membersihkan tanda kutip ganda dari quote (jika ada)
     cleaned_quote = quote.strip('"') 
     
+    # SELURUH KARTU DIRENDER DALAM SATU BLOK HTML
     html_code = f"""
     <div class="profile-card">
         <a href="{link_ig}" target="_blank" class="profile-link" title="Klik untuk ke Instagram">
@@ -146,7 +146,7 @@ def kartu_anggota(nama, nim, peran, url_foto, quote, link_ig):
         
         <span class="role-badge">{peran}</span> 
         
-        <div style="font-style: italic; font-size: 0.75rem; color: #666; margin-top: 10px;">
+        <div class="quote-text">
             "{cleaned_quote}"
         </div>
     </div>
@@ -169,7 +169,6 @@ st.markdown("Aplikasi ini dipersembahkan oleh **Kelompok 5** untuk memenuhi Tuga
 st.write("---")
 
 # 2. Kartu Anggota (Menggunakan 5 Kolom Kompak)
-# Urutan: Fahri, Erlita, Azmi, Alden, Ahmad Maftuh
 col_fahri, col_erlita, col_azmi, col_alden, col_ahmad = st.columns(5)
 
 with col_fahri:
@@ -213,6 +212,8 @@ with col_alden:
     )
 
 with col_ahmad:
+    # Perbaikan: Mengganti URL dummy Dicebear dengan URL file gambar Anda jika ada
+    # Jika tidak ada, Dicebear tetap boleh digunakan
     kartu_anggota(
         nama="Ahmad Maftuh Rojak", 
         nim="12121212", 
