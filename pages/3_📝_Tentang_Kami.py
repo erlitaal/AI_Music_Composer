@@ -100,12 +100,12 @@ with c1:
 
 with c2:
     kartu_anggota(
-        nama="Alden", 
-        nim="12121212", 
+        nama="Alden Shalih Falah", 
+        nim="1247050050", 
         peran="Frontend & UI/UX",
         url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Data",
-        quote="\"Mengubah angka menjadi nada.\"",
-        link_ig="https://www.instagram.com/"
+        quote="\"The moment you drop 'if' is the moment your life starts moving forward.\"",
+        link_ig="https://www.instagram.com/dennn.26sf"
     )
 
 with c3:
