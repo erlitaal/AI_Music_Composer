@@ -741,6 +741,6 @@ with tab3:
 # Footer
 st.markdown("""
 <div style="text-align: center; color: #666; font-size: 0.8rem; margin-top: 50px; border-top: 1px solid #ccc; padding-top: 20px;">
-    © 2025 Kelompok 5 • Engineering Art
+    © 2025 Kelompok 5 • Informatics Engineering
 </div>
 """, unsafe_allow_html=True)
