@@ -110,12 +110,12 @@ with c2:
 
 with c3:
     kartu_anggota(
-        nama="Maftuh", 
+        nama="Ahmad Maftuh Rojak", 
         nim="12121212", 
         peran="Frontend & UI/UX",
         url_foto="https://api.dicebear.com/7.x/avataaars/svg?seed=Jack",
-        quote="\"Mengubah angka menjadi nada.\"",
-        link_ig="https://www.instagram.com/"
+        quote="\"growing freely.\"",
+        link_ig="https://www.instagram.com/stagarling"
     )
 
 st.write("---")
