@@ -2,7 +2,7 @@ import streamlit as st
 
 # --- KONFIGURASI HALAMAN ---
 st.set_page_config(
-    page_title="AI Music Composer",
+    page_title="AI Music Generator",
     page_icon="🎵",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -235,7 +235,7 @@ with col1:
     
     c_price, c_desc = st.columns([1, 2])
     with c_price:
-        st.markdown('<p class="price-tag">Kelompok 5</p>', unsafe_allow_html=True)
+        st.markdown('<p class="price-tag">Generator</p>', unsafe_allow_html=True)
         st.caption("Version 1.0")
     with c_desc:
         st.markdown("### Royalty Free")
@@ -336,6 +336,6 @@ st.write("")
 # Footer
 st.markdown("""
 <div style="text-align: center; color: #666; font-size: 0.8rem; margin-top: 50px; border-top: 1px solid #ccc; padding-top: 20px;">
-    © 2025 Kelompok 5 • Engineering Art
+    © 2025 Kelompok 5 • Informatics Engineering
 </div>
 """, unsafe_allow_html=True)
