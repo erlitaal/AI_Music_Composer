@@ -59,19 +59,6 @@ st.markdown("""
     }
     div[data-testid="stPageLink-NavLink"] svg { display: none; }
     
-    /* TOMBOL BIASA (GENERATE/DOWNLOAD) */
-    .stButton > button {
-        background-color: transparent;
-        border: 2px solid #000;
-        color: #000;
-        border-radius: 0;
-        font-weight: bold;
-    }
-    .stButton > button:hover {
-        background-color: #000;
-        color: #fff;
-        border-color: #000;
-    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -522,25 +509,48 @@ st.markdown("""
     .stButton > button {
         width: 100%;
         border: 1px solid #000;
-        background: transparent;
+        background-color: transparent;
         padding: 12px;
         font-family: 'Playfair Display', serif;
         text-transform: uppercase;
         letter-spacing: 2px;
         transition: 0.3s;
-        color: #fff !important;
+        color: #000 !important;
         border-radius: 0px;
     }
+    /* Efek Hover */
     .stButton > button:hover {
-        background: #000 !important;
-        color: #fff !important;
+        background-color: #000 !important;
         border-color: #000 !important;
+        color: #fff !important; /* Paksa putih saat hover */
     }
-    /* Tombol Generate Disabled */
-    .stButton > button:disabled {
-        border-color: #ccc;
-        color: #ccc;
-        cursor: not-allowed;
+    .stButton > button:hover p {
+        color: #fff !important;
+    }
+    [data-testid="stButton"] button[kind="primary"] {
+        background-color: #000000 !important; /* Hitam pekat */
+        border: 2px solid #000000 !important;
+        color: #ffffff !important;
+        transition: all 0.3s ease; /* Animasi transisi halus */
+    }
+    [data-testid="stButton"] button[kind="primary"]:hover {
+        background-color: #333333 !important; /* Jadi abu-abu gelap */
+        border-color: #333333 !important;
+        transform: translateY(-2px); /* Efek tombol naik sedikit */
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Ada bayangan */
+    }
+    [data-testid="stButton"] button[kind="primary"]:disabled {
+        background-color: #cccccc !important;
+        border-color: #cccccc !important;
+        color: #888888 !important;
+        cursor: not-allowed !important;
+        transform: none !important;
+        box-shadow: none !important;
+        opacity: 0.7;
+    }
+    [data-testid="stButton"] button[kind="primary"]:disabled:hover {
+        background-color: #cccccc !important;
+        color: #888888 !important;
     }
     
     /* Tombol Pilihan Mood */
@@ -551,16 +561,135 @@ st.markdown("""
     }
     [data-testid="stButton"] button[kind="primary"] {
         background: #000 !important;
-        color: #fff !important;
-        border: 1px solid #000;
+        border: 1px solid #000 !important;
+        color: #fff !important; /* Paksa putih saat dipilih */
         font-weight: bold;
     }
-    
-    /* Tombol Download Kecil */
-    .download-btn {
-        width: 100%;
+    /* Memastikan teks pada tombol Primary ikut putih */
+    [data-testid="stButton"] button[kind="primary"] p {
+        color: #fff !important;
     }
-
+    
+    /* --- 2. TOMBOL DOWNLOAD --- */
+    /* Target khusus tombol download (.stDownloadButton) */
+    .stDownloadButton > button {
+        background-color: #000 !important; /* Background Hitam */
+        border: 2px solid #000 !important;
+        color: #fff !important; /* Teks Putih (Sesuai Request) */
+        border-radius: 0px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+    /* Memastikan elemen teks (p) di dalamnya juga putih */
+    .stDownloadButton > button p {
+        color: #fff !important;
+    }
+    /* State Hover Download: Jadi transparan dengan teks hitam (Efek kebalikan) */
+    .stDownloadButton > button:hover {
+        background-color: transparent !important;
+        color: #000 !important;
+    }
+    .stDownloadButton > button:hover p {
+        color: #000 !important;
+    }
+    
+    /* --- PERBAIKAN WARNA TEKS ADVANCED MODE --- */
+    /* Mengubah warna nilai yang DIPILIH di dalam kotak menjadi Putih */
+    .stSelectbox div[data-baseweb="select"] div {
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+    }
+    .stSelectbox svg {
+        fill: #ffffff !important;
+    }
+    div[data-baseweb="popover"] ul {
+        background-color: #262730 !important;
+    }
+    div[data-baseweb="popover"] li div, 
+    div[data-baseweb="popover"] li span {
+        color: #ffffff !important;
+    }
+    /* Warna saat mouse diarahkan ke opsi (Hover) di dropdown */
+    div[data-baseweb="popover"] li:hover {
+        background-color: #444444 !important;
+    }
+    
+    /* --- CUSTOM TOOLTIP (HELP) --- */
+    /* 1. Ikon Tanda Tanya (?) */
+    /* Membuat latar belakang lingkaran hitam di belakang ikon */
+    [data-testid="stTooltipIcon"] {
+        background-color: #000000 !important;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    /* Mengubah warna tanda tanyanya jadi Putih */
+    [data-testid="stTooltipIcon"] svg {
+        fill: #000000 !important;
+        width: 12px !important;
+        height: 12px !important;
+    }
+    /* 2. Kotak Penjelasan (Popup) */
+    /* Mengubah background kotak menjadi Hitam Pekat */
+    div[data-baseweb="tooltip"],
+    div[data-baseweb="tooltip"] > div {
+        background-color: #000000 !important;
+        border-radius: 6px;
+        border: 1px solid #333;
+    }
+    /* Mengubah SEMUA teks di dalam tooltip menjadi Putih */
+    div[data-baseweb="tooltip"] * {
+        color: #ffffff !important;
+    }
+    
+    /* --- CUSTOM EXPANDER (FIXED COLOR) --- */
+    /* 1. Container Utama */
+    details {
+        background-color: transparent !important;
+        border: 1px solid #444 !important;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    /* 2. Bagian Judul (Summary) - KONDISI NORMAL */
+    summary {
+        background-color: transparent !important; /* Hitam */
+        color: #ffffff !important;             /* Putih */
+        font-family: 'Lato', sans-serif !important;
+        font-weight: bold;
+        padding: 10px !important;
+        border-radius: 5px;
+    }
+    /* 3. KONDISI TERBUKA ([open]) - Paksa Tetap Hitam */
+    details[open] > summary {
+        background-color: transparent !important;
+        color: #ffffff !important;
+    }
+    /* 4. KONDISI FOKUS/KLIK (:focus) - Hapus Outline Biru & Paksa Hitam */
+    summary:focus, summary:active {
+        background-color: transparent !important;
+        color: #ffffff !important;
+        outline: none !important;     /* Hapus garis biru bawaan browser */
+        box-shadow: none !important;  /* Hapus efek bayangan fokus */
+    }
+    /* 5. KONDISI HOVER (Mouse di atasnya) - Ubah dikit biar interaktif */
+    summary:hover {
+        background-color: #D3D3D3 !important; /* Abu sangat gelap (sedikit beda) */
+        color: #dddddd !important;
+    }
+    /* 6. Ikon Panah */
+    summary svg {
+        fill: #000000 !important;
+    }
+    /* 7. Isi Konten */
+    details > div {
+        background-color: transparent !important;
+        color: #dddddd !important;
+        padding: 15px;
+        border-top: 1px solid #333;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -663,7 +792,8 @@ with tab1:
                 st.download_button("⬇ WAV", st.session_state['last_wav'], "song.wav", "audio/wav", use_container_width=True)
             with col_dl_mid:
                 st.download_button("⬇ MIDI", st.session_state['last_midi'], "song.mid", "audio/midi", use_container_width=True)
-
+                st.toast("Track saved to History!", icon="💾")
+                
     # --- KOLOM 3: INFO DESCRIPTION ---
     with c_right:
         if not is_active:
@@ -694,28 +824,102 @@ with tab1:
             """, unsafe_allow_html=True)
 
 with tab2:
+    def validate_bpm():
+        if st.session_state.adv_bpm_val < 40:
+            st.session_state.adv_bpm_val = 40
+        elif st.session_state.adv_bpm_val > 240:
+            st.session_state.adv_bpm_val = 240
+        
     st.markdown("### Advanced Configuration")
     cc1, cc2 = st.columns(2)
+    if 'adv_bpm_val' not in st.session_state:
+        st.session_state.adv_bpm_val = 120
     with cc1:
-        adv_key = st.selectbox("Key", list(KEYS.keys()))
-        adv_scale = st.selectbox("Scale", list(SCALE_INTERVALS.keys()))
-        adv_prog = st.selectbox("Progression", list(PROGRESSIONS.keys()))
+        adv_key = st.selectbox(
+            "Key", 
+            list(KEYS.keys()), 
+            help="Nada dasar lagu (Root Note). C adalah standar umum."
+        )
+        adv_scale = st.selectbox(
+            "Scale", 
+            list(SCALE_INTERVALS.keys()), 
+            help="Tangga nada yang menentukan nuansa."
+        )
+        adv_prog = st.selectbox(
+            "Progression", 
+            list(PROGRESSIONS.keys()), 
+            help="Urutan pergerakan chord (Progresi) yang menjadi kerangka lagu."
+        )
     with cc2:
-        adv_style = st.selectbox("Style", list(GROOVE_CONFIG.keys()))
-        adv_instr = st.selectbox("Instrument", list(INSTRUMENTS.keys()))
-        adv_bpm = st.number_input("BPM", 60, 180, 120)
+        adv_style = st.selectbox(
+            "Style", 
+            list(GROOVE_CONFIG.keys()), 
+            help="Gaya permainan instrumen (Pola iringan dan drum)."
+        )
+        adv_instr = st.selectbox(
+            "Instrument", 
+            list(INSTRUMENTS.keys()), 
+            help="Instrumen utama yang memainkan melodi."
+        )
+        adv_bpm = st.number_input(
+            "BPM (Beats Per Minute)", 
+            min_value=-2000000000, 
+            max_value=2000000000,
+            key="adv_bpm_val",            # Terhubung ke session_state
+            on_change=validate_bpm,       # Panggil validasi saat berubah
+            help="Kecepatan lagu (40-240). Nilai otomatis disesuaikan jika diluar batas."
+        )
     
-    adv_bars = st.slider("Length (Bars)", 4, 32, 8, step=4, key="adv_b")
-    adv_tracks = st.multiselect("Layers", ["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"], default=["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"])
-
+    adv_bars = st.slider(
+        "Length (Bars)", 
+        4, 32, 8, step=4, key="adv_b",
+        help="Durasi lagu dalam jumlah bar (1 Bar = 4 ketukan)."
+    )
+    
+    adv_tracks = st.multiselect(
+        "Layers", 
+        ["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"], 
+        default=["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"],
+        help="Pilih elemen instrumen yang ingin dimasukkan ke dalam lagu."
+    )
+    
     if st.button("Compose Custom Track", type="primary"):
+        final_bpm = st.session_state.adv_bpm_val
+
         with st.spinner("Composing..."):
             struct = generate_structure(adv_key, adv_scale, adv_prog, adv_bars, adv_style)
             melody = generate_melody(struct, adv_bars, adv_scale)
-            midi_b = create_final_midi(struct, melody, adv_instr, adv_tracks, adv_bpm)
-            wav_b, err_b = render_audio(midi_b, adv_bpm, adv_bars)
+            midi_b = create_final_midi(struct, melody, adv_instr, adv_tracks, final_bpm)
+            wav_b, err_b = render_audio(midi_b, final_bpm, adv_bars)
             if err_b: st.error(err_b)
             else:
+                # --- MULAI PERBAIKAN: SIMPAN KE HISTORY ---
+                ts = datetime.now().strftime("%H:%M")
+                # Memberi nama khusus untuk custom track
+                custom_name = f"Custom ({adv_style} - {adv_key})"
+                entry_id = str(uuid.uuid4())
+                full_details = {
+                    "Scale": adv_scale,
+                    "Progression": adv_prog,
+                    "Instrument": adv_instr,
+                    "BPM": final_bpm,
+                    "Length": f"{adv_bars} Bars",
+                    "Active Tracks": ", ".join(adv_tracks)
+                }
+                
+                entry = {
+                    "id": entry_id,
+                    "time": ts, 
+                    "name": custom_name, 
+                    "midi": midi_b, 
+                    "wav": wav_b, 
+                    "info": f"{final_bpm} BPM",
+                    "details": full_details
+                }
+                
+                # Masukkan ke awal list history
+                st.session_state['history'].insert(0, entry)
+                
                 col_1, col_2, col_3 = st.columns([3, 1, 5])
                 with col_1:
                     st.audio(wav_b, format='audio/wav')
@@ -723,19 +927,44 @@ with tab2:
                     st.download_button("Download WAV", wav_b, "custom.wav", "audio/wav")
                 with col_3:
                     st.download_button("Download MIDI", midi_b, "custom.mid", "audio/midi")
+                    st.toast("Track saved to History!", icon="💾")
+                    
 
 with tab3:
     st.markdown("### Session History")
+    
+    if not st.session_state['history']:
+        st.info("Belum ada riwayat lagu.")
+        
     for i, item in enumerate(st.session_state['history']):
         with st.container():
-            c1, c2, c3 = st.columns([1, 3, 0.8]) 
-            with c1: st.caption(item['time'])
+            c1, c2, c3 = st.columns([0.5, 2, 3]) 
+            with c1: 
+                st.caption(item['time'])
             with c2: 
                 st.write(f"**{item['name']}**")
-                st.audio(item['wav'], format='audio/wav')
+                if 'info' in item:
+                    st.caption(item['info'])
             with c3:
-                st.download_button("⬇ WAV", item['wav'], f"h_{i}.wav", key=f"dlw_{i}", use_container_width=True)
-                st.download_button("⬇ MIDI", item['midi'], f"h_{i}.mid", key=f"dlm_{i}", use_container_width=True)
+                st.audio(item['wav'], format='audio/wav')
+
+            c_det, c_btn = st.columns([3, 2])
+            
+            with c_det:
+                if 'details' in item and item['details']:
+                    short_id = item['id'][:8]
+                    expander_label = f"Lihat Detail (ID: {short_id})"
+                    with st.expander(expander_label):
+                        for k, v in item['details'].items():
+                            st.markdown(f"**{k}:** {v}")
+                else:
+                    st.caption("Dibuat menggunakan Simple Mode")
+
+            with c_btn:
+                b1, b2 = st.columns(2)
+                with b1: st.download_button("WAV", item['wav'], f"h_{i}.wav", key=f"dlw_{i}", use_container_width=True)
+                with b2: st.download_button("MIDI", item['midi'], f"h_{i}.mid", key=f"dlm_{i}", use_container_width=True)
+            
             st.divider()
 
 # Footer
