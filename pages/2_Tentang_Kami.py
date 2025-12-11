@@ -162,7 +162,7 @@ st.write("---")
 c_intro1, c_intro2 = st.columns([1.5, 1])
 
 with c_intro1:
-    st.markdown('<div style="font-size: clamp(2.5rem, 10vw, 5rem); font-family: Playfair Display; font-weight: 900; line-height: 1;">THE<br>CREATORS</div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size: clamp(3rem, 10vw, 5rem); font-family: Playfair Display; font-weight: 900; line-height: 1;">THE<br>CREATORS</div>', unsafe_allow_html=True)
     st.write("")
     st.markdown("""
     **Misi Kami:** Mencari 19 juta lapangan pekerjaan.
