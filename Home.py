@@ -223,7 +223,7 @@ with col1:
     st.markdown("""
     <p style="
         font-family: 'Playfair Display', serif; 
-        font-size: 160px; 
+        font-size: clamp(95px, 12vw, 160px); 
         font-weight: 700; 
         line-height: 0.8; 
         color: black; 
