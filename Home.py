@@ -274,6 +274,9 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+if 'current_mood' not in st.session_state:
+    st.session_state['current_mood'] = None
+
 # Layout 4 Kolom
 p1, p2, p3, p4 = st.columns(4)
 
@@ -289,6 +292,8 @@ with p1:
     # Typography Deskripsi yang sudah diperbaiki (font agak tipis, spasi lega)
     st.markdown('<div class="preset-desc">Energi positif dengan ritme yang memikat. Cocok untuk vlog travel atau pembukaan yang ceria.</div>', unsafe_allow_html=True)
     if st.button("PILIH POP", key="btn_happy"):
+        st.session_state['current_mood'] = "Morning Pop"
+        st.session_state['is_generated'] = False
         st.switch_page("pages/1_Generator.py")
 
 # --- PRESET 2: SAD ---
@@ -302,6 +307,8 @@ with p2:
     st.markdown('<div class="preset-meta">65 BPM • BALLAD</div>', unsafe_allow_html=True)
     st.markdown('<div class="preset-desc">Sentuhan piano lembut yang menyentuh hati. Sempurna untuk adegan emosional yang mendalam.</div>', unsafe_allow_html=True)
     if st.button("PILIH BALLAD", key="btn_sad"):
+        st.session_state['current_mood'] = "Melancholy"
+        st.session_state['is_generated'] = False
         st.switch_page("pages/1_Generator.py")
 
 # --- PRESET 3: JAZZ ---
@@ -315,6 +322,8 @@ with p3:
     st.markdown('<div class="preset-meta">90 BPM • SWING</div>', unsafe_allow_html=True)
     st.markdown('<div class="preset-desc">Suasana lounge santai dengan harmoni chord 7th yang kompleks dan elegan.</div>', unsafe_allow_html=True)
     if st.button("PILIH JAZZ", key="btn_jazz"):
+        st.session_state['current_mood'] = "Midnight Jazz"
+        st.session_state['is_generated'] = False
         st.switch_page("pages/1_Generator.py")
 
 # --- PRESET 4: CINEMATIC ---
@@ -328,6 +337,8 @@ with p4:
     st.markdown('<div class="preset-meta">135 BPM • HARMONIC MINOR</div>', unsafe_allow_html=True)
     st.markdown('<div class="preset-desc">Ketegangan orkestra dan violin yang intens. Dirancang untuk momen klimaks dramatis.</div>', unsafe_allow_html=True)
     if st.button("PILIH CINE", key="btn_cine"):
+        st.session_state['current_mood'] = "The Epic Saga"
+        st.session_state['is_generated'] = False
         st.switch_page("pages/1_Generator.py")
 
 st.write("")
