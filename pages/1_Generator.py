@@ -17,7 +17,7 @@ from scipy.io import wavfile
 # --- PAGE CONFIG ---
 st.set_page_config(page_title="Generator Musik", page_icon="🎵", layout="wide", initial_sidebar_state="collapsed")
 
-# --- INITIALIZE SESSION STATE ---
+# --- INISIALISASI STATE ---
 if 'history' not in st.session_state:
     st.session_state['history'] = []
 if 'current_mood' not in st.session_state:
@@ -25,12 +25,11 @@ if 'current_mood' not in st.session_state:
 if 'is_generated' not in st.session_state:
     st.session_state['is_generated'] = False
 
-# --- CSS HIDE UI & NAVBAR ---
+# --- CSS UMUM ---
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lato:wght@300;400&display=swap');
-    
-    /* SEMBUNYIKAN UI BAWAAN */
+
     [data-testid="stSidebar"] { display: none; }
     [data-testid="stHeader"] { background-color: transparent; }
     [data-testid="stToolbar"] { visibility: hidden; }
@@ -98,28 +97,28 @@ MOOD_PRESETS = {
         "bpm": 120, "style": "Pop", "instr": "Grand Piano",
         "tracks": ["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"],
         "desc": "Pop ceria dengan tempo cepat.",
-        "color": "#E6B800" # Emas Tua (Elegan)
+        "color": "#E6B800"
     },
     "Melancholy": {
         "scale": "Major", "prog": "Emotional Turn (vi-IV-I-V)", 
         "bpm": 65, "style": "Ballad", "instr": "Grand Piano",
         "tracks": ["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"],
         "desc": "Ballad lambat dengan nuansa melankolis.",
-        "color": "#5D6D7E" # Abu-abu Biru (Kalem)
+        "color": "#5D6D7E"
     },
     "Midnight Jazz": {
         "scale": "Major", "prog": "Jazz Standard (ii-V-I)", 
         "bpm": 90, "style": "Jazz", "instr": "Electric Piano (Rhodes)",
         "tracks": ["Melodi", "Chord", "Bass", "Drum"], 
         "desc": "Swing feel dengan chord 7th.",
-        "color": "#8D6E63" # Coklat Kopi
+        "color": "#8D6E63"
     },
     "The Epic Saga": {
         "scale": "Harmonic Minor", "prog": "Dark Tension (i-ii-vii)", 
         "bpm": 135, "style": "Orchestra", "instr": "Violin",
         "tracks": ["Melodi", "Chord", "Bass", "Drum", "Strings/Pad"],
         "desc": "Nuansa orkestra yang intens dan cepat.",
-        "color": "#800000" # Merah Marun Gelap
+        "color": "#800000"
     }
 }
 
@@ -154,7 +153,7 @@ DRUM_PATTERNS = {
 }
 
 # ==========================================
-# 2. LOGIC ENGINE
+# 2. LOGIKA SISTEM
 # ==========================================
 
 def get_chord_notes(root, scale_name, degree, style="Pop"):
@@ -227,7 +226,7 @@ def generate_melody(structure, bars, scale_name):
     return melody_events
 
 # ==========================================
-# 3. AUDIO ENGINE
+# 3. AUDIO SISTEM (OUTPUT)
 # ==========================================
 
 def apply_swing(time, amount):
@@ -326,10 +325,8 @@ def create_final_midi(structure, melody, instr_name, active_tracks, bpm):
     return midi_data.getvalue()
 
 # --- FUNGSI RENDER AUDIO ---
-# --- FUNGSI RENDER AUDIO (FIXED DTYPE CASTING) ---
 def render_audio(midi_bytes, bpm, bars):
-    
-    # 1. SETUP PATH SOUNDFONT
+
     current_dir = os.path.dirname(os.path.abspath(__file__))
     root_dir = os.path.dirname(current_dir)
     
@@ -358,7 +355,6 @@ def render_audio(midi_bytes, bpm, bars):
         except Exception as e:
             return None, f"Gagal download SoundFont: {e}"
 
-    # 2. GUNAKAN FOLDER TEMP SYSTEM
     temp_dir = tempfile.gettempdir()
     unique_id = str(uuid.uuid4())
     
@@ -366,19 +362,15 @@ def render_audio(midi_bytes, bpm, bars):
     temp_wav_path = os.path.join(temp_dir, f"ai_music_{unique_id}.wav")
 
     try:
-        # 3. TULIS FILE MIDI
         with open(temp_midi_path, "wb") as f:
             f.write(midi_bytes)
             
-        # 4. CEK FLUIDSYNTH
         if os.name == 'nt': 
             try:
                 subprocess.run(["fluidsynth", "--version"], check=True, stdout=subprocess.DEVNULL)
             except:
                 return None, "FluidSynth tidak terinstall di Environment Variable."
 
-        # 5. JALANKAN COMMAND
-        # Urutan Benar: fluidsynth -ni -F output.wav -r 44100 soundfont.sf2 input.mid
         cmd = [
             "fluidsynth", 
             "-ni", 
@@ -395,13 +387,11 @@ def render_audio(midi_bytes, bpm, bars):
             stderr=subprocess.PIPE,
             text=True
         )
-        
-        # 6. CEK HASIL
+
         if not os.path.exists(temp_wav_path):
             error_log = result.stderr if result.stderr else result.stdout
             return None, f"FluidSynth Gagal Render:\n{error_log}"
 
-        # 7. TRIMMING LOGIC (DENGAN FIX CASTING)
         total_beats = bars * 4
         expected_sec = total_beats / (bpm / 60)
         target_samples = int((expected_sec + 0.1) * 44100) 
@@ -410,18 +400,15 @@ def render_audio(midi_bytes, bpm, bars):
         
         if len(audio_data) > target_samples:
             trimmed = audio_data[:target_samples]
-            
-            # FADE OUT
+
             fade_len = int(0.2 * sample_rate)
             if len(trimmed) > fade_len:
                 fade_curve = np.linspace(1.0, 0.0, fade_len)
-                
-                # --- PERBAIKAN DI SINI (ASTYPE INT16) ---
-                if len(trimmed.shape) == 2: # Stereo
-                    # Kalikan lalu ubah paksa jadi int16
+
+                if len(trimmed.shape) == 2:
                     trimmed[-fade_len:, 0] = (trimmed[-fade_len:, 0] * fade_curve).astype(np.int16)
                     trimmed[-fade_len:, 1] = (trimmed[-fade_len:, 1] * fade_curve).astype(np.int16)
-                else: # Mono
+                else:
                     trimmed[-fade_len:] = (trimmed[-fade_len:] * fade_curve).astype(np.int16)
             
             buf = BytesIO()
@@ -430,8 +417,7 @@ def render_audio(midi_bytes, bpm, bars):
         else:
             with open(temp_wav_path, "rb") as f:
                 final_data = f.read()
-        
-        # 8. BERSIH-BERSIH
+
         try:
             if os.path.exists(temp_midi_path): os.remove(temp_midi_path)
             if os.path.exists(temp_wav_path): os.remove(temp_wav_path)
@@ -443,7 +429,7 @@ def render_audio(midi_bytes, bpm, bars):
         return None, f"System Error: {e}"
 
 # ==========================================
-# 3. WEB UI 
+# 4. WEB UI 
 # ==========================================
 
 # -- CSS CUSTOM --
@@ -518,26 +504,25 @@ st.markdown("""
         color: #000 !important;
         border-radius: 0px;
     }
-    /* Efek Hover */
     .stButton > button:hover {
         background-color: #000 !important;
         border-color: #000 !important;
-        color: #fff !important; /* Paksa putih saat hover */
+        color: #fff !important;
     }
     .stButton > button:hover p {
         color: #fff !important;
     }
     [data-testid="stButton"] button[kind="primary"] {
-        background-color: #000000 !important; /* Hitam pekat */
+        background-color: #000000 !important;
         border: 2px solid #000000 !important;
         color: #ffffff !important;
-        transition: all 0.3s ease; /* Animasi transisi halus */
+        transition: all 0.3s ease;
     }
     [data-testid="stButton"] button[kind="primary"]:hover {
-        background-color: #333333 !important; /* Jadi abu-abu gelap */
+        background-color: #333333 !important;
         border-color: #333333 !important;
-        transform: translateY(-2px); /* Efek tombol naik sedikit */
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Ada bayangan */
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
     [data-testid="stButton"] button[kind="primary"]:disabled {
         background-color: #cccccc !important;
@@ -562,29 +547,25 @@ st.markdown("""
     [data-testid="stButton"] button[kind="primary"] {
         background: #000 !important;
         border: 1px solid #000 !important;
-        color: #fff !important; /* Paksa putih saat dipilih */
+        color: #fff !important;
         font-weight: bold;
     }
-    /* Memastikan teks pada tombol Primary ikut putih */
     [data-testid="stButton"] button[kind="primary"] p {
         color: #fff !important;
     }
     
-    /* --- 2. TOMBOL DOWNLOAD --- */
-    /* Target khusus tombol download (.stDownloadButton) */
+    /* --- TOMBOL DOWNLOAD --- */
     .stDownloadButton > button {
-        background-color: #000 !important; /* Background Hitam */
+        background-color: #000 !important;
         border: 2px solid #000 !important;
-        color: #fff !important; /* Teks Putih (Sesuai Request) */
+        color: #fff !important;
         border-radius: 0px;
         font-weight: bold;
         transition: 0.3s;
     }
-    /* Memastikan elemen teks (p) di dalamnya juga putih */
     .stDownloadButton > button p {
         color: #fff !important;
     }
-    /* State Hover Download: Jadi transparan dengan teks hitam (Efek kebalikan) */
     .stDownloadButton > button:hover {
         background-color: transparent !important;
         color: #000 !important;
@@ -593,8 +574,6 @@ st.markdown("""
         color: #000 !important;
     }
     
-    /* --- PERBAIKAN WARNA TEKS ADVANCED MODE --- */
-    /* Mengubah warna nilai yang DIPILIH di dalam kotak menjadi Putih */
     .stSelectbox div[data-baseweb="select"] div {
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
@@ -609,14 +588,11 @@ st.markdown("""
     div[data-baseweb="popover"] li span {
         color: #ffffff !important;
     }
-    /* Warna saat mouse diarahkan ke opsi (Hover) di dropdown */
     div[data-baseweb="popover"] li:hover {
         background-color: #444444 !important;
     }
     
     /* --- CUSTOM TOOLTIP (HELP) --- */
-    /* 1. Ikon Tanda Tanya (?) */
-    /* Membuat latar belakang lingkaran hitam di belakang ikon */
     [data-testid="stTooltipIcon"] {
         background-color: #000000 !important;
         border-radius: 50%;
@@ -626,55 +602,46 @@ st.markdown("""
         align-items: center;
         justify-content: center;
     }
-    /* Mengubah warna tanda tanyanya jadi Putih */
     [data-testid="stTooltipIcon"] svg {
         fill: #000000 !important;
         width: 12px !important;
         height: 12px !important;
     }
-    /* 2. Kotak Penjelasan (Popup) */
-    /* Mengubah background kotak menjadi Hitam Pekat */
     div[data-baseweb="tooltip"],
     div[data-baseweb="tooltip"] > div {
         background-color: #000000 !important;
         border-radius: 6px;
         border: 1px solid #333;
     }
-    /* Mengubah SEMUA teks di dalam tooltip menjadi Putih */
     div[data-baseweb="tooltip"] * {
         color: #ffffff !important;
     }
     
-    /* --- CUSTOM EXPANDER (FIXED COLOR) --- */
-    /* 1. Container Utama */
+    /* --- CUSTOM EXPANDER --- */
     details {
         background-color: transparent !important;
         border: 1px solid #444 !important;
         border-radius: 5px;
         margin-bottom: 10px;
     }
-    /* 2. Bagian Judul (Summary) - KONDISI NORMAL */
     summary {
-        background-color: transparent !important; /* Hitam */
-        color: #ffffff !important;             /* Putih */
+        background-color: transparent !important;
+        color: #ffffff !important;
         font-family: 'Lato', sans-serif !important;
         font-weight: bold;
         padding: 10px !important;
         border-radius: 5px;
     }
-    /* 3. KONDISI TERBUKA ([open]) - Paksa Tetap Hitam */
     details[open] > summary {
         background-color: transparent !important;
         color: #ffffff !important;
     }
-    /* 4. KONDISI FOKUS/KLIK (:focus) - Hapus Outline Biru & Paksa Hitam */
     summary:focus, summary:active {
         background-color: transparent !important;
         color: #ffffff !important;
-        outline: none !important;     /* Hapus garis biru bawaan browser */
-        box-shadow: none !important;  /* Hapus efek bayangan fokus */
+        outline: none !important;
+        box-shadow: none !important;
     }
-    /* 5. KONDISI HOVER (Mouse di atasnya) - Ubah dikit biar interaktif */
     summary:hover {
         background-color: #D3D3D3 !important; /* Abu sangat gelap (sedikit beda) */
         color: #dddddd !important;
@@ -697,14 +664,11 @@ st.markdown("""
 st.markdown('<h1 style="font-size: 3rem; margin-bottom: 10px;">Generator</h1>', unsafe_allow_html=True)
 st.markdown('<div style="height: 2px; background: #000; width: 50px; margin-bottom: 40px;"></div>', unsafe_allow_html=True)
 
-# TABS
 tab1, tab2, tab3 = st.tabs(["Simple Mode", "Advanced Mode", "History"])
 
-# --- TAB 1: PLAYER MODE ---
 with tab1:
     c_left, c_center, c_right = st.columns([1, 1.3, 1], gap="large")
-    
-    # --- LOGIKA TOMBOL TOGGLE (DESELECT) ---
+
     def set_mood(selected_mood_name):
         if st.session_state['current_mood'] == selected_mood_name:
             st.session_state['current_mood'] = None
@@ -713,7 +677,6 @@ with tab1:
             st.session_state['current_mood'] = selected_mood_name
             st.session_state['is_generated'] = False
 
-    # --- KOLOM 1: MOOD LIST ---
     with c_left:
         st.markdown("#### SELECT MOOD")
         st.caption("Klik untuk memilih, klik lagi untuk batal.")
@@ -727,7 +690,6 @@ with tab1:
         st.write("")
         dur_sim = st.slider("Duration (Bars)", 4, 32, 8, step=4)
 
-    # --- KOLOM 2: VINYL ---
     with c_center:
         current_mood = st.session_state['current_mood']
         is_active = (current_mood is not None)
@@ -743,7 +705,6 @@ with tab1:
             spin_class = ""
             p = None
 
-        # SVG FIXED (NO INDENTATION ISSUE)
         st.markdown(f'''
         <div class="vinyl-wrapper" style="margin-top: 20px; margin-bottom: 30px;">
             <div class="tonearm {tonearm_class}"></div>
@@ -761,7 +722,6 @@ with tab1:
         </div>
         ''', unsafe_allow_html=True)
         
-        # Tombol Generate
         if st.button("GENERATE TRACK", type="primary", disabled=not is_active, use_container_width=True):
             if is_active:
                 with st.spinner("Composing..."):
@@ -783,9 +743,7 @@ with tab1:
                         st.session_state['history'].insert(0, entry)
                         st.rerun()
 
-        # PLAYER & DOWNLOAD BUTTONS (CENTER)
         if st.session_state['is_generated'] and 'last_wav' in st.session_state:
-            # Layout: Audio kiri (besar), Tombol Download kanan (kecil)
             st.audio(st.session_state['last_wav'], format='audio/wav')
             col_dl_wav, col_dl_mid = st.columns([2, 2], gap="small")
             with col_dl_wav:
@@ -793,8 +751,7 @@ with tab1:
             with col_dl_mid:
                 st.download_button("⬇ MIDI", st.session_state['last_midi'], "song.mid", "audio/midi", use_container_width=True)
                 st.toast("Track saved to History!", icon="💾")
-                
-    # --- KOLOM 3: INFO DESCRIPTION ---
+
     with c_right:
         if not is_active:
              st.markdown("""
@@ -865,8 +822,8 @@ with tab2:
             "BPM (Beats Per Minute)", 
             min_value=-2000000000, 
             max_value=2000000000,
-            key="adv_bpm_val",            # Terhubung ke session_state
-            on_change=validate_bpm,       # Panggil validasi saat berubah
+            key="adv_bpm_val",
+            on_change=validate_bpm,
             help="Kecepatan lagu (40-240). Nilai otomatis disesuaikan jika diluar batas."
         )
     
@@ -893,9 +850,7 @@ with tab2:
             wav_b, err_b = render_audio(midi_b, final_bpm, adv_bars)
             if err_b: st.error(err_b)
             else:
-                # --- MULAI PERBAIKAN: SIMPAN KE HISTORY ---
                 ts = datetime.now().strftime("%H:%M")
-                # Memberi nama khusus untuk custom track
                 custom_name = f"Custom ({adv_style} - {adv_key})"
                 entry_id = str(uuid.uuid4())
                 full_details = {
@@ -916,8 +871,7 @@ with tab2:
                     "info": f"{final_bpm} BPM",
                     "details": full_details
                 }
-                
-                # Masukkan ke awal list history
+
                 st.session_state['history'].insert(0, entry)
                 
                 col_1, col_2, col_3 = st.columns([3, 1, 5])
