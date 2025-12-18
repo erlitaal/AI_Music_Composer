@@ -1,13 +1,13 @@
 import streamlit as st
 
-# --- KONFIGURASI HALAMAN ---
+# --- PAGE CONFIG ---
 st.set_page_config(
     page_title="Tentang Kami", 
     page_icon="👥", 
     layout="wide"
 )
 
-# --- CSS CUSTOM (SAMA DENGAN HOME AGAR KONSISTEN) ---
+# --- CSS CUSTOM ---
 st.markdown("""
 <style>
     /* 1. IMPORT FONT */
@@ -169,7 +169,6 @@ with c_intro1:
     """)
 
 with c_intro2:
-    # Dekorasi elemen musik/IT
     st.markdown("""
     <div style="text-align: right; opacity: 0.6; font-family: 'Courier New'; font-size: 0.9rem;">
         import creativity<br>
@@ -187,11 +186,10 @@ st.write("")
 st.write("")
 
 # =========================================
-# TEAM GRID (LAYOUT KARTU)
+# TEAM GRID
 # =========================================
 
 def team_card(nama, nim, role, img_url, quote, link):
-    # Menggunakan HTML Card Custom agar desainnya kotak & punya border hitam
     st.markdown(f"""
     <a href="{link}" target="_blank" style="text-decoration: none; color: inherit;">
         <div class="profile-card">
