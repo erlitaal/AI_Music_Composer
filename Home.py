@@ -1,6 +1,6 @@
 import streamlit as st
 
-# --- KONFIGURASI HALAMAN ---
+# --- PAGE CONFIG ---
 st.set_page_config(
     page_title="AI Music Generator",
     page_icon="🎵",
@@ -218,8 +218,7 @@ col1, col2 = st.columns([1.3, 1])
 
 with col1:
     st.markdown('<div style="height: 30px;"></div>', unsafe_allow_html=True)
-    
-    # JUDUL BESAR 160px
+
     st.markdown("""
     <p style="
         font-family: 'Playfair Display', serif; 
@@ -277,7 +276,6 @@ st.markdown("""
 if 'current_mood' not in st.session_state:
     st.session_state['current_mood'] = None
 
-# Layout 4 Kolom
 p1, p2, p3, p4 = st.columns(4)
 
 # --- PRESET 1: HAPPY ---
@@ -289,7 +287,6 @@ with p1:
     """, unsafe_allow_html=True)
     st.markdown('<div class="preset-title">Morning Pop</div>', unsafe_allow_html=True)
     st.markdown('<div class="preset-meta">120 BPM • MAJOR SCALE</div>', unsafe_allow_html=True)
-    # Typography Deskripsi yang sudah diperbaiki (font agak tipis, spasi lega)
     st.markdown('<div class="preset-desc">Energi positif dengan ritme yang memikat. Cocok untuk vlog travel atau pembukaan yang ceria.</div>', unsafe_allow_html=True)
     if st.button("PILIH POP", key="btn_happy"):
         st.session_state['current_mood'] = "Morning Pop"
@@ -311,7 +308,7 @@ with p2:
         st.session_state['is_generated'] = False
         st.switch_page("pages/1_Generator.py")
 
-# --- PRESET 3: JAZZ ---
+# --- PRESET 3: SANTAI/JAZZ ---
 with p3:
     st.markdown("""
         <img src="https://images.unsplash.com/photo-1629907451365-6731862a0d32?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDN8fGphenp8ZW58MHx8MHx8fDA%3D" 
@@ -326,7 +323,7 @@ with p3:
         st.session_state['is_generated'] = False
         st.switch_page("pages/1_Generator.py")
 
-# --- PRESET 4: CINEMATIC ---
+# --- PRESET 4: EPIC/TEGANG/CINEMATIC ---
 with p4:
     st.markdown("""
         <img src="https://images.unsplash.com/photo-1708164333066-dabc2dac17d2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
